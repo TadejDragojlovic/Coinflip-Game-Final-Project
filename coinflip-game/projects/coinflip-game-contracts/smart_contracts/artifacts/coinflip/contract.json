@@ -28,7 +28,20 @@
             "returns": {
                 "type": "string"
             },
-            "desc": "Player A initiates the game, he pays the wager he wants for the game and then chooses the side of the coin (\"Heads\" or \"Tails\""
+            "desc": "Player A initiates the game, he pays the wager he wants for the game and then chooses the side of the coin (\"Heads\" or \"Tails\")"
+        },
+        {
+            "name": "join_game",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            },
+            "desc": "Player B joins the game, gets the side that's left (player A picks first), pays the wager and waits for the game to resolve by player A"
         }
     ],
     "networks": {}
