@@ -1,6 +1,6 @@
 #pragma version 8
 intcblock 0 1
-bytecblock 0x 0x456d707479 0x706c617965725f615f6163636f756e74 0x706c617965725f615f63686f696365 0x7761676572 0x151f7c75 0x706c617965725f625f6163636f756e74 0x4e6f742063686f73656e20796574 0x706c617965725f67616d65735f776f6e 0x706c617965725f625f63686f696365 0x5461696c73 0x4865616473
+bytecblock 0x 0x706c617965725f615f6163636f756e74 0x456d707479 0x706c617965725f615f63686f696365 0x7761676572 0x151f7c75 0x706c617965725f625f6163636f756e74 0x4e6f742063686f73656e20796574 0x706c617965725f67616d65735f776f6e 0x706c617965725f625f63686f696365 0x5461696c73 0x4865616473
 txn NumAppArgs
 intc_0 // 0
 ==
@@ -18,7 +18,7 @@ pushbytes 0xc627c42c // "join_game(pay)string"
 ==
 bnz main_l9
 txna ApplicationArgs 0
-pushbytes 0x6e7ba885 // "resolve()string"
+pushbytes 0x0e33ffbc // "resolve(account)string"
 ==
 bnz main_l8
 txna ApplicationArgs 0
@@ -134,14 +134,14 @@ retsub
 // create
 create_1:
 proto 0 0
-bytec_2 // "player_a_account"
-bytec_1 // "Empty"
+bytec_1 // "player_a_account"
+bytec_2 // "Empty"
 app_global_put
 bytec_3 // "player_a_choice"
 bytec 7 // "Not chosen yet"
 app_global_put
 bytec 6 // "player_b_account"
-bytec_1 // "Empty"
+bytec_2 // "Empty"
 app_global_put
 bytec 9 // "player_b_choice"
 bytec 7 // "Not chosen yet"
@@ -182,9 +182,9 @@ gtxns Receiver
 global CurrentApplicationAddress
 ==
 &&
-bytec_2 // "player_a_account"
+bytec_1 // "player_a_account"
 app_global_get
-bytec_1 // "Empty"
+bytec_2 // "Empty"
 ==
 &&
 bytec_3 // "player_a_choice"
@@ -193,7 +193,7 @@ bytec 7 // "Not chosen yet"
 ==
 &&
 assert
-bytec_2 // "player_a_account"
+bytec_1 // "player_a_account"
 txn Sender
 app_global_put
 bytec_3 // "player_a_choice"
@@ -227,15 +227,20 @@ assert
 intc_1 // pay
 intc_1 // pay
 ==
-bytec_2 // "player_a_account"
+bytec_1 // "player_a_account"
 app_global_get
-bytec_1 // "Empty"
+bytec_2 // "Empty"
 !=
 &&
 bytec 6 // "player_b_account"
 app_global_get
-bytec_1 // "Empty"
+bytec_2 // "Empty"
 ==
+&&
+bytec_1 // "player_a_account"
+app_global_get
+txn Sender
+!=
 &&
 frame_dig -1
 gtxns Receiver
@@ -270,29 +275,28 @@ retsub
 
 // resolve
 resolve_5:
-proto 0 1
+proto 1 1
 bytec_0 // ""
 txn Sender
 global CurrentApplicationID
 app_opted_in
 // unauthorized
 assert
-bytec_2 // "player_a_account"
+bytec_1 // "player_a_account"
 app_global_get
 store 0
-bytec 6 // "player_b_account"
-app_global_get
+frame_dig -1
+txnas Accounts
 store 1
 load 0
 txn Sender
 ==
-load 1
-bytec_1 // "Empty"
+bytec 6 // "player_b_account"
+app_global_get
+bytec_2 // "Empty"
 !=
 &&
 assert
-load 0
-load 1
 callsub decidewinner_7
 store 2
 bytec 4 // "wager"
@@ -300,6 +304,7 @@ app_global_get
 load 2
 callsub payout_8
 load 2
+txnas Accounts
 bytec 8 // "player_games_won"
 intc_1 // 1
 app_local_put
@@ -322,16 +327,16 @@ retsub
 
 // decide_winner
 decidewinner_7:
-proto 2 1
+proto 0 1
 bytec_3 // "player_a_choice"
 app_global_get
 bytec 10 // "Tails"
 ==
 bnz decidewinner_7_l2
-frame_dig -1
+intc_1 // 1
 b decidewinner_7_l3
 decidewinner_7_l2:
-frame_dig -2
+intc_0 // 0
 decidewinner_7_l3:
 retsub
 
@@ -341,14 +346,15 @@ proto 2 0
 itxn_begin
 intc_1 // pay
 itxn_field TypeEnum
-frame_dig -1
-itxn_field Receiver
-pushint 2 // 2
 frame_dig -2
+pushint 2 // 2
 *
 txn Fee
 -
 itxn_field Amount
+frame_dig -1
+txnas Accounts
+itxn_field Receiver
 itxn_submit
 retsub
 
@@ -436,6 +442,12 @@ retsub
 resolvecaster_13:
 proto 0 0
 bytec_0 // ""
+intc_0 // 0
+txna ApplicationArgs 1
+intc_0 // 0
+getbyte
+frame_bury 1
+frame_dig 1
 callsub resolve_5
 frame_bury 0
 bytec 5 // 0x151f7c75

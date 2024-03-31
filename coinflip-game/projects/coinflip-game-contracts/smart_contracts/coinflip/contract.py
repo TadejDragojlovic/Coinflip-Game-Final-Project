@@ -7,6 +7,8 @@ Author: Tadej Dragojlovic
 Created: 31/03/2024
 """
 
+# TODO: Find a way to skip the process of putting in the application address when paying the wager
+
 class CoinflipState:
     player_a_choice = beaker.GlobalStateValue(
         stack_type = pt.TealType.bytes,
@@ -101,8 +103,6 @@ def join_game(payment: pt.abi.PaymentTransaction, *, output: pt.abi.String) -> p
     Player B joins the game, gets the side that's left (player A picks first), pays the wager and waits for the game to resolve by player A
     """
 
-    # NOTE: Currently player A can join on the player B slot too, fix this
-
     return pt.Seq(
         pt.Assert(
             pt.And(
@@ -111,6 +111,8 @@ def join_game(payment: pt.abi.PaymentTransaction, *, output: pt.abi.String) -> p
                 # Making sure that the slot B isn't filled and that slot A is
                 app.state.player_a_account.get() != pt.Bytes("Empty"), 
                 app.state.player_b_account.get() == pt.Bytes("Empty"),
+
+                app.state.player_a_account.get() != pt.Txn.sender(),
 
                 payment.get().receiver() == pt.Global.current_application_address(),
                 app.state.wager.get() == payment.get().amount(),
@@ -124,29 +126,30 @@ def join_game(payment: pt.abi.PaymentTransaction, *, output: pt.abi.String) -> p
     )
 
 @app.external(authorize = beaker.Authorize.opted_in())
-def resolve(*, output: pt.abi.String) -> pt.Expr:
+def resolve(opp: pt.abi.Account, *, output: pt.abi.String) -> pt.Expr:
     """
     Player A resolves the game, win counter updates and the wager pays out to the player who won
     """
+
     player_a = pt.ScratchVar(pt.TealType.bytes)
     player_b = pt.ScratchVar(pt.TealType.bytes)
-    winner = pt.ScratchVar(pt.TealType.bytes)
+    winner = pt.ScratchVar(pt.TealType.uint64)
     
     return pt.Seq(
         player_a.store(app.state.player_a_account),
-        player_b.store(app.state.player_b_account),
+        player_b.store(opp.address()),
 
         pt.Assert(
             pt.And(
                 player_a.load() == pt.Txn.sender(), # Checking whether it is actually player A who initiates this method
-                player_b.load() != pt.Bytes("Empty"), # Checking whether all the slots are filled
+                app.state.player_b_account.get() != pt.Bytes("Empty"), # Checking whether all the slots are filled
                 # TODO: anything else needed here?
             )
         ),
 
-        winner.store(decide_winner(player_a.load(), player_b.load())),
+        winner.store(decide_winner()),
         payout(app.state.wager.get(), winner.load()),
-        app.state.player_games_won[winner.load()].set(pt.Int(1)),
+        app.state.player_games_won[pt.Txn.accounts[winner.load()]].set(pt.Int(1)),
     )
 
 @app.external(authorize = beaker.Authorize.opted_in())
@@ -157,10 +160,10 @@ def check_wins(*, output: pt.abi.Uint64) -> pt.Expr:
 
     return output.set(app.state.player_games_won.get())
 
-@pt.Subroutine(pt.TealType.bytes)
-def decide_winner(player_a: pt.Expr, player_b: pt.Expr) -> pt.Expr:
+@pt.Subroutine(pt.TealType.uint64)
+def decide_winner() -> pt.Expr:
     """
-    Suborutine that chooses randomly between 1 (Heads) or 2 (Tails), and decides the winner of the coinflip (winner is [0,1] == [A,B])
+    Suborutine that chooses randomly between 1 (Heads) or 2 (Tails), and returns the index of the winner's account (0==A, 1==B)
     """
 
     # This is done in vanilla python because nothing here needs to be saved no the chain, just a quick way to process the winner
@@ -169,26 +172,22 @@ def decide_winner(player_a: pt.Expr, player_b: pt.Expr) -> pt.Expr:
 
     return pt.Seq(
         pt.If(app.state.player_a_choice.get() == pt.Bytes(rng))
-        .Then(player_a)
-        .Else(player_b)
+        .Then(pt.Int(0))
+        .Else(pt.Int(1))
     )
 
 @pt.Subroutine(pt.TealType.none)
-def payout(wager: pt.Expr, winner_account: pt.Expr) -> pt.Expr:
+def payout(wager: pt.Expr, winner_index: pt.Expr) -> pt.Expr:
     """
     Subroutine that pays out the winner
     """
 
-    return pt.Seq(
-        pt.InnerTxnBuilder.Begin(),
-        pt.InnerTxnBuilder.SetFields(
-            {
-                pt.TxnField.type_enum: pt.TxnType.Payment,
-                pt.TxnField.receiver: winner_account,
-                pt.TxnField.amount: pt.Int(2)*wager - pt.Txn.fee(),
-            }
-        ),
-        pt.InnerTxnBuilder.Submit(),
+    return pt.InnerTxnBuilder.Execute(
+        {
+            pt.TxnField.type_enum: pt.TxnType.Payment,
+            pt.TxnField.amount: wager*pt.Int(2) - pt.Txn.fee(),
+            pt.TxnField.receiver: pt.Txn.accounts[winner_index],
+        }
     )
 
 @pt.Subroutine(pt.TealType.bytes)

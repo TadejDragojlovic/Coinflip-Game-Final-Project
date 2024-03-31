@@ -45,7 +45,12 @@
         },
         {
             "name": "resolve",
-            "args": [],
+            "args": [
+                {
+                    "type": "account",
+                    "name": "opp"
+                }
+            ],
             "returns": {
                 "type": "string"
             },
