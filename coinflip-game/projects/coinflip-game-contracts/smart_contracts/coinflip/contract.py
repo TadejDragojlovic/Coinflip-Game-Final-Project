@@ -87,15 +87,18 @@ def start_game(payment: pt.abi.PaymentTransaction, choice: pt.abi.String, *, out
                 app.state.wager.get() == pt.Int(0),
                 payment.get().receiver() == pt.Global.current_application_address(), # Making sure the user put the correct application address
                 app.state.player_a_choice.get() == pt.Bytes("Not chosen yet"),
+
+                # TODO: Need to add checks whether user inputed the side correctly (heads/tails in any form should be allowed)
+
+                check_correct_input(choice.get()) == pt.Int(1),
             )
 
-            # TODO: Need to add checks whether user inputed the side correctly (heads/tails in any form should be allowed)
         ),
 
         app.state.player_a_account.set(pt.Txn.sender()),
 
         # TODO: if the user inputed the correct word (tails/heads) but in improper form (HEAds, HEADS, hEaDS, etc.), transform into correct using subroutine
-        app.state.player_a_choice.set(choice.get()),
+        # app.state.player_a_choice.set(choice.get()),
 
         app.state.wager.set(payment.get().amount()),
 
@@ -199,3 +202,76 @@ def leftover_side(player_a_choice: pt.Expr) -> pt.Expr:
         .Then(pt.Bytes("Tails"))
         .Else(pt.Bytes("Heads"))
     )
+
+@pt.Subroutine(pt.TealType.uint64)
+def check_correct_input(input: pt.Expr) -> pt.Expr:
+    """
+    """
+
+    # NOTE: This might be excess subroutine, figure out
+
+    input_tolower = pt.ScratchVar(pt.TealType.bytes)
+
+    return pt.Seq(
+        input_tolower.store(byteslice_tolower(input)),
+
+        app.state.player_a_choice.set(input_tolower.load()),
+
+        pt.Int(1),
+    )
+
+# TODO: Add description for all the remaining subroutines/methods
+
+@pt.Subroutine(pt.TealType.none)
+def byteslice_tolower(byteslice: pt.Expr) -> pt.Expr:
+    """
+    """
+    # pt.GetByte(choice.get(), pt.Int(0)) == pt.Int(65),
+
+    i = pt.ScratchVar(pt.TealType.uint64)
+    curr_byte = pt.ScratchVar(pt.TealType.uint64)
+    tmp = pt.ScratchVar(pt.TealType.bytes)
+
+    i.store(pt.Int(0)),
+
+    return pt.Seq(
+        [
+            pt.For(
+                i.store(pt.Int(0)),
+                i.load() < pt.Len(byteslice),
+                i.store(i.load()+pt.Int(1)),
+            ).Do(
+                pt.Seq(
+                    [
+                        curr_byte.store(pt.GetByte(byteslice, i.load())),
+
+                        pt.If(
+                            pt.And(
+                                curr_byte.load() >= pt.Int(65),
+                                curr_byte.load() <= pt.Int(90),
+                            )
+                        ).Then(
+                            # NOTE:
+                            # - This for loop doesn't work, the value that is written in the "player_a_choice" is the original,
+                            # for some reason it doesn't register the change from `byte_tolower()`, more specifically from `pt.SetByte()` function.
+                            # - Could simply use recursion and do it that way, but need to resolve this issue.
+                            app.state.player_a_choice.set(byte_tolower(byteslice, i.load(), curr_byte.load())),
+                        )
+
+                    ]
+                )
+
+            ),
+
+            # NOTE: returning byteslice, but it remains the same as the original which is not correct
+            byteslice,
+        ]
+    )
+    # return byte_tolower(byteslice, pt.Int(0), pt.GetByte(byteslice, pt.Int(0)))
+
+@pt.Subroutine(pt.TealType.bytes)
+def byte_tolower(byteslice: pt.Expr, index: pt.Expr, byte: pt.Expr) -> pt.Expr:
+    """
+    """
+
+    return pt.SetByte(byteslice, index, pt.Int(32)+byte)
