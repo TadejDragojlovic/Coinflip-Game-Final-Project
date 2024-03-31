@@ -1,16 +1,20 @@
 #pragma version 8
 intcblock 0 1
-bytecblock 0x
+bytecblock 0x 0x706c617965725f615f6163636f756e74 0x4e6f20706c61796572 0x706c617965725f615f63686f696365 0x7761676572 0x4e6f742063686f73656e20796574 0x151f7c75
 txn NumAppArgs
 intc_0 // 0
 ==
-bnz main_l4
+bnz main_l6
 txna ApplicationArgs 0
 pushbytes 0x02bece11 // "hello(string)string"
 ==
-bnz main_l3
+bnz main_l5
+txna ApplicationArgs 0
+pushbytes 0x2988913f // "start_game(pay,string)string"
+==
+bnz main_l4
 err
-main_l3:
+main_l4:
 txn OnCompletion
 intc_0 // NoOp
 ==
@@ -19,20 +23,45 @@ intc_0 // 0
 !=
 &&
 assert
-callsub hellocaster_1
+callsub startgamecaster_5
 intc_1 // 1
 return
-main_l4:
+main_l5:
 txn OnCompletion
 intc_0 // NoOp
 ==
-bnz main_l6
-err
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub hellocaster_4
+intc_1 // 1
+return
 main_l6:
+txn OnCompletion
+intc_0 // NoOp
+==
+bnz main_l10
+txn OnCompletion
+intc_1 // OptIn
+==
+bnz main_l9
+err
+main_l9:
+txn ApplicationID
+intc_0 // 0
+!=
+assert
+callsub optin_2
+intc_1 // 1
+return
+main_l10:
 txn ApplicationID
 intc_0 // 0
 ==
 assert
+callsub create_1
 intc_1 // 1
 return
 
@@ -54,8 +83,89 @@ concat
 frame_bury 0
 retsub
 
+// create
+create_1:
+proto 0 0
+bytec_1 // "player_a_account"
+bytec_2 // "No player"
+app_global_put
+bytec_3 // "player_a_choice"
+bytec 5 // "Not chosen yet"
+app_global_put
+pushbytes 0x706c617965725f625f6163636f756e74 // "player_b_account"
+bytec_2 // "No player"
+app_global_put
+bytec 4 // "wager"
+intc_0 // 0
+app_global_put
+retsub
+
+// opt_in
+optin_2:
+proto 0 0
+txn Sender
+pushbytes 0x706c617965725f67616d65735f776f6e // "player_games_won"
+intc_0 // 0
+app_local_put
+retsub
+
+// start_game
+startgame_3:
+proto 2 1
+bytec_0 // ""
+txn Sender
+global CurrentApplicationID
+app_opted_in
+// unauthorized
+assert
+intc_1 // pay
+intc_1 // pay
+==
+bytec 4 // "wager"
+app_global_get
+intc_0 // 0
+==
+&&
+frame_dig -2
+gtxns Receiver
+global CurrentApplicationAddress
+==
+&&
+bytec_1 // "player_a_account"
+app_global_get
+bytec_2 // "No player"
+==
+&&
+bytec_3 // "player_a_choice"
+app_global_get
+bytec 5 // "Not chosen yet"
+==
+&&
+assert
+bytec_1 // "player_a_account"
+txn Sender
+app_global_put
+bytec_3 // "player_a_choice"
+frame_dig -1
+extract 2 0
+app_global_put
+bytec 4 // "wager"
+frame_dig -2
+gtxns Amount
+app_global_put
+pushbytes 0x5375636365737366756c6c2e // "Successfull."
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+retsub
+
 // hello_caster
-hellocaster_1:
+hellocaster_4:
 proto 0 0
 bytec_0 // ""
 dup
@@ -64,7 +174,34 @@ frame_bury 1
 frame_dig 1
 callsub hello_0
 frame_bury 0
-pushbytes 0x151f7c75 // 0x151f7c75
+bytec 6 // 0x151f7c75
+frame_dig 0
+concat
+log
+retsub
+
+// start_game_caster
+startgamecaster_5:
+proto 0 0
+bytec_0 // ""
+intc_0 // 0
+bytec_0 // ""
+txna ApplicationArgs 1
+frame_bury 2
+txn GroupIndex
+intc_1 // 1
+-
+frame_bury 1
+frame_dig 1
+gtxns TypeEnum
+intc_1 // pay
+==
+assert
+frame_dig 1
+frame_dig 2
+callsub startgame_3
+frame_bury 0
+bytec 6 // 0x151f7c75
 frame_dig 0
 concat
 log

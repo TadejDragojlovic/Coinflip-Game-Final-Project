@@ -27,29 +27,61 @@ _APP_SPEC_JSON = r"""{
             "call_config": {
                 "no_op": "CALL"
             }
+        },
+        "start_game(pay,string)string": {
+            "call_config": {
+                "no_op": "CALL"
+            }
         }
     },
     "source": {
-        "approval": "I3ByYWdtYSB2ZXJzaW9uIDgKaW50Y2Jsb2NrIDAgMQpieXRlY2Jsb2NrIDB4CnR4biBOdW1BcHBBcmdzCmludGNfMCAvLyAwCj09CmJueiBtYWluX2w0CnR4bmEgQXBwbGljYXRpb25BcmdzIDAKcHVzaGJ5dGVzIDB4MDJiZWNlMTEgLy8gImhlbGxvKHN0cmluZylzdHJpbmciCj09CmJueiBtYWluX2wzCmVycgptYWluX2wzOgp0eG4gT25Db21wbGV0aW9uCmludGNfMCAvLyBOb09wCj09CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCiE9CiYmCmFzc2VydApjYWxsc3ViIGhlbGxvY2FzdGVyXzEKaW50Y18xIC8vIDEKcmV0dXJuCm1haW5fbDQ6CnR4biBPbkNvbXBsZXRpb24KaW50Y18wIC8vIE5vT3AKPT0KYm56IG1haW5fbDYKZXJyCm1haW5fbDY6CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCj09CmFzc2VydAppbnRjXzEgLy8gMQpyZXR1cm4KCi8vIGhlbGxvCmhlbGxvXzA6CnByb3RvIDEgMQpieXRlY18wIC8vICIiCnB1c2hieXRlcyAweDQ4NjU2YzZjNmYyYzIwIC8vICJIZWxsbywgIgpmcmFtZV9kaWcgLTEKZXh0cmFjdCAyIDAKY29uY2F0CmZyYW1lX2J1cnkgMApmcmFtZV9kaWcgMApsZW4KaXRvYgpleHRyYWN0IDYgMApmcmFtZV9kaWcgMApjb25jYXQKZnJhbWVfYnVyeSAwCnJldHN1YgoKLy8gaGVsbG9fY2FzdGVyCmhlbGxvY2FzdGVyXzE6CnByb3RvIDAgMApieXRlY18wIC8vICIiCmR1cAp0eG5hIEFwcGxpY2F0aW9uQXJncyAxCmZyYW1lX2J1cnkgMQpmcmFtZV9kaWcgMQpjYWxsc3ViIGhlbGxvXzAKZnJhbWVfYnVyeSAwCnB1c2hieXRlcyAweDE1MWY3Yzc1IC8vIDB4MTUxZjdjNzUKZnJhbWVfZGlnIDAKY29uY2F0CmxvZwpyZXRzdWI=",
+        "approval": "I3ByYWdtYSB2ZXJzaW9uIDgKaW50Y2Jsb2NrIDAgMQpieXRlY2Jsb2NrIDB4IDB4NzA2YzYxNzk2NTcyNWY2MTVmNjE2MzYzNmY3NTZlNzQgMHg0ZTZmMjA3MDZjNjE3OTY1NzIgMHg3MDZjNjE3OTY1NzI1ZjYxNWY2MzY4NmY2OTYzNjUgMHg3NzYxNjc2NTcyIDB4NGU2Zjc0MjA2MzY4NmY3MzY1NmUyMDc5NjU3NCAweDE1MWY3Yzc1CnR4biBOdW1BcHBBcmdzCmludGNfMCAvLyAwCj09CmJueiBtYWluX2w2CnR4bmEgQXBwbGljYXRpb25BcmdzIDAKcHVzaGJ5dGVzIDB4MDJiZWNlMTEgLy8gImhlbGxvKHN0cmluZylzdHJpbmciCj09CmJueiBtYWluX2w1CnR4bmEgQXBwbGljYXRpb25BcmdzIDAKcHVzaGJ5dGVzIDB4Mjk4ODkxM2YgLy8gInN0YXJ0X2dhbWUocGF5LHN0cmluZylzdHJpbmciCj09CmJueiBtYWluX2w0CmVycgptYWluX2w0Ogp0eG4gT25Db21wbGV0aW9uCmludGNfMCAvLyBOb09wCj09CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCiE9CiYmCmFzc2VydApjYWxsc3ViIHN0YXJ0Z2FtZWNhc3Rlcl81CmludGNfMSAvLyAxCnJldHVybgptYWluX2w1Ogp0eG4gT25Db21wbGV0aW9uCmludGNfMCAvLyBOb09wCj09CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCiE9CiYmCmFzc2VydApjYWxsc3ViIGhlbGxvY2FzdGVyXzQKaW50Y18xIC8vIDEKcmV0dXJuCm1haW5fbDY6CnR4biBPbkNvbXBsZXRpb24KaW50Y18wIC8vIE5vT3AKPT0KYm56IG1haW5fbDEwCnR4biBPbkNvbXBsZXRpb24KaW50Y18xIC8vIE9wdEluCj09CmJueiBtYWluX2w5CmVycgptYWluX2w5Ogp0eG4gQXBwbGljYXRpb25JRAppbnRjXzAgLy8gMAohPQphc3NlcnQKY2FsbHN1YiBvcHRpbl8yCmludGNfMSAvLyAxCnJldHVybgptYWluX2wxMDoKdHhuIEFwcGxpY2F0aW9uSUQKaW50Y18wIC8vIDAKPT0KYXNzZXJ0CmNhbGxzdWIgY3JlYXRlXzEKaW50Y18xIC8vIDEKcmV0dXJuCgovLyBoZWxsbwpoZWxsb18wOgpwcm90byAxIDEKYnl0ZWNfMCAvLyAiIgpwdXNoYnl0ZXMgMHg0ODY1NmM2YzZmMmMyMCAvLyAiSGVsbG8sICIKZnJhbWVfZGlnIC0xCmV4dHJhY3QgMiAwCmNvbmNhdApmcmFtZV9idXJ5IDAKZnJhbWVfZGlnIDAKbGVuCml0b2IKZXh0cmFjdCA2IDAKZnJhbWVfZGlnIDAKY29uY2F0CmZyYW1lX2J1cnkgMApyZXRzdWIKCi8vIGNyZWF0ZQpjcmVhdGVfMToKcHJvdG8gMCAwCmJ5dGVjXzEgLy8gInBsYXllcl9hX2FjY291bnQiCmJ5dGVjXzIgLy8gIk5vIHBsYXllciIKYXBwX2dsb2JhbF9wdXQKYnl0ZWNfMyAvLyAicGxheWVyX2FfY2hvaWNlIgpieXRlYyA1IC8vICJOb3QgY2hvc2VuIHlldCIKYXBwX2dsb2JhbF9wdXQKcHVzaGJ5dGVzIDB4NzA2YzYxNzk2NTcyNWY2MjVmNjE2MzYzNmY3NTZlNzQgLy8gInBsYXllcl9iX2FjY291bnQiCmJ5dGVjXzIgLy8gIk5vIHBsYXllciIKYXBwX2dsb2JhbF9wdXQKYnl0ZWMgNCAvLyAid2FnZXIiCmludGNfMCAvLyAwCmFwcF9nbG9iYWxfcHV0CnJldHN1YgoKLy8gb3B0X2luCm9wdGluXzI6CnByb3RvIDAgMAp0eG4gU2VuZGVyCnB1c2hieXRlcyAweDcwNmM2MTc5NjU3MjVmNjc2MTZkNjU3MzVmNzc2ZjZlIC8vICJwbGF5ZXJfZ2FtZXNfd29uIgppbnRjXzAgLy8gMAphcHBfbG9jYWxfcHV0CnJldHN1YgoKLy8gc3RhcnRfZ2FtZQpzdGFydGdhbWVfMzoKcHJvdG8gMiAxCmJ5dGVjXzAgLy8gIiIKdHhuIFNlbmRlcgpnbG9iYWwgQ3VycmVudEFwcGxpY2F0aW9uSUQKYXBwX29wdGVkX2luCi8vIHVuYXV0aG9yaXplZAphc3NlcnQKaW50Y18xIC8vIHBheQppbnRjXzEgLy8gcGF5Cj09CmJ5dGVjIDQgLy8gIndhZ2VyIgphcHBfZ2xvYmFsX2dldAppbnRjXzAgLy8gMAo9PQomJgpmcmFtZV9kaWcgLTIKZ3R4bnMgUmVjZWl2ZXIKZ2xvYmFsIEN1cnJlbnRBcHBsaWNhdGlvbkFkZHJlc3MKPT0KJiYKYnl0ZWNfMSAvLyAicGxheWVyX2FfYWNjb3VudCIKYXBwX2dsb2JhbF9nZXQKYnl0ZWNfMiAvLyAiTm8gcGxheWVyIgo9PQomJgpieXRlY18zIC8vICJwbGF5ZXJfYV9jaG9pY2UiCmFwcF9nbG9iYWxfZ2V0CmJ5dGVjIDUgLy8gIk5vdCBjaG9zZW4geWV0Igo9PQomJgphc3NlcnQKYnl0ZWNfMSAvLyAicGxheWVyX2FfYWNjb3VudCIKdHhuIFNlbmRlcgphcHBfZ2xvYmFsX3B1dApieXRlY18zIC8vICJwbGF5ZXJfYV9jaG9pY2UiCmZyYW1lX2RpZyAtMQpleHRyYWN0IDIgMAphcHBfZ2xvYmFsX3B1dApieXRlYyA0IC8vICJ3YWdlciIKZnJhbWVfZGlnIC0yCmd0eG5zIEFtb3VudAphcHBfZ2xvYmFsX3B1dApwdXNoYnl0ZXMgMHg1Mzc1NjM2MzY1NzM3MzY2NzU2YzZjMmUgLy8gIlN1Y2Nlc3NmdWxsLiIKZnJhbWVfYnVyeSAwCmZyYW1lX2RpZyAwCmxlbgppdG9iCmV4dHJhY3QgNiAwCmZyYW1lX2RpZyAwCmNvbmNhdApmcmFtZV9idXJ5IDAKcmV0c3ViCgovLyBoZWxsb19jYXN0ZXIKaGVsbG9jYXN0ZXJfNDoKcHJvdG8gMCAwCmJ5dGVjXzAgLy8gIiIKZHVwCnR4bmEgQXBwbGljYXRpb25BcmdzIDEKZnJhbWVfYnVyeSAxCmZyYW1lX2RpZyAxCmNhbGxzdWIgaGVsbG9fMApmcmFtZV9idXJ5IDAKYnl0ZWMgNiAvLyAweDE1MWY3Yzc1CmZyYW1lX2RpZyAwCmNvbmNhdApsb2cKcmV0c3ViCgovLyBzdGFydF9nYW1lX2Nhc3RlcgpzdGFydGdhbWVjYXN0ZXJfNToKcHJvdG8gMCAwCmJ5dGVjXzAgLy8gIiIKaW50Y18wIC8vIDAKYnl0ZWNfMCAvLyAiIgp0eG5hIEFwcGxpY2F0aW9uQXJncyAxCmZyYW1lX2J1cnkgMgp0eG4gR3JvdXBJbmRleAppbnRjXzEgLy8gMQotCmZyYW1lX2J1cnkgMQpmcmFtZV9kaWcgMQpndHhucyBUeXBlRW51bQppbnRjXzEgLy8gcGF5Cj09CmFzc2VydApmcmFtZV9kaWcgMQpmcmFtZV9kaWcgMgpjYWxsc3ViIHN0YXJ0Z2FtZV8zCmZyYW1lX2J1cnkgMApieXRlYyA2IC8vIDB4MTUxZjdjNzUKZnJhbWVfZGlnIDAKY29uY2F0CmxvZwpyZXRzdWI=",
         "clear": "I3ByYWdtYSB2ZXJzaW9uIDgKcHVzaGludCAwIC8vIDAKcmV0dXJu"
     },
     "state": {
         "global": {
-            "num_byte_slices": 0,
-            "num_uints": 0
+            "num_byte_slices": 3,
+            "num_uints": 1
         },
         "local": {
             "num_byte_slices": 0,
-            "num_uints": 0
+            "num_uints": 1
         }
     },
     "schema": {
         "global": {
-            "declared": {},
+            "declared": {
+                "player_a_account": {
+                    "type": "bytes",
+                    "key": "player_a_account",
+                    "descr": "First player's account"
+                },
+                "player_a_choice": {
+                    "type": "bytes",
+                    "key": "player_a_choice",
+                    "descr": "First player's choice for the coinflip"
+                },
+                "player_b_account": {
+                    "type": "bytes",
+                    "key": "player_b_account",
+                    "descr": "Second player's account"
+                },
+                "wager": {
+                    "type": "uint64",
+                    "key": "wager",
+                    "descr": "Betting amount for the coinflip"
+                }
+            },
             "reserved": {}
         },
         "local": {
-            "declared": {},
+            "declared": {
+                "player_games_won": {
+                    "type": "uint64",
+                    "key": "player_games_won",
+                    "descr": "Amount of coinflip games won"
+                }
+            },
             "reserved": {}
         }
     },
@@ -67,12 +99,30 @@ _APP_SPEC_JSON = r"""{
                 "returns": {
                     "type": "string"
                 }
+            },
+            {
+                "name": "start_game",
+                "args": [
+                    {
+                        "type": "pay",
+                        "name": "payment"
+                    },
+                    {
+                        "type": "string",
+                        "name": "choice"
+                    }
+                ],
+                "returns": {
+                    "type": "string"
+                },
+                "desc": "Player A initiates the game, he pays the wager he wants for the game and then chooses the side of the coin (\"Heads\" or \"Tails\""
             }
         ],
         "networks": {}
     },
     "bare_call_config": {
-        "no_op": "CREATE"
+        "no_op": "CREATE",
+        "opt_in": "CALL"
     }
 }"""
 APP_SPEC = algokit_utils.ApplicationSpecification.from_json(_APP_SPEC_JSON)
@@ -158,6 +208,57 @@ class HelloArgs(_ArgsBase[str]):
 
 
 @dataclasses.dataclass(kw_only=True)
+class StartGameArgs(_ArgsBase[str]):
+    """Player A initiates the game, he pays the wager he wants for the game and then chooses the side of the coin ("Heads" or "Tails" """
+
+    payment: TransactionWithSigner
+    choice: str
+
+    @staticmethod
+    def method() -> str:
+        return "start_game(pay,string)string"
+
+
+class ByteReader:
+    def __init__(self, data: bytes):
+        self._data = data
+
+    @property
+    def as_bytes(self) -> bytes:
+        return self._data
+
+    @property
+    def as_str(self) -> str:
+        return self._data.decode("utf8")
+
+    @property
+    def as_base64(self) -> str:
+        return base64.b64encode(self._data).decode("utf8")
+
+    @property
+    def as_hex(self) -> str:
+        return self._data.hex()
+
+
+class GlobalState:
+    def __init__(self, data: dict[bytes, bytes | int]):
+        self.player_a_account = ByteReader(typing.cast(bytes, data.get(b"player_a_account")))
+        """First player's account"""
+        self.player_a_choice = ByteReader(typing.cast(bytes, data.get(b"player_a_choice")))
+        """First player's choice for the coinflip"""
+        self.player_b_account = ByteReader(typing.cast(bytes, data.get(b"player_b_account")))
+        """Second player's account"""
+        self.wager = typing.cast(int, data.get(b"wager"))
+        """Betting amount for the coinflip"""
+
+
+class LocalState:
+    def __init__(self, data: dict[bytes, bytes | int]):
+        self.player_games_won = typing.cast(int, data.get(b"player_games_won"))
+        """Amount of coinflip games won"""
+
+
+@dataclasses.dataclass(kw_only=True)
 class SimulateOptions:
     allow_more_logs: bool = dataclasses.field(default=False)
     allow_empty_signatures: bool = dataclasses.field(default=False)
@@ -211,6 +312,34 @@ class Composer:
         )
         return self
 
+    def start_game(
+        self,
+        *,
+        payment: TransactionWithSigner,
+        choice: str,
+        transaction_parameters: algokit_utils.TransactionParameters | None = None,
+    ) -> "Composer":
+        """Player A initiates the game, he pays the wager he wants for the game and then chooses the side of the coin ("Heads" or "Tails"
+        
+        Adds a call to `start_game(pay,string)string` ABI method
+        
+        :param TransactionWithSigner payment: The `payment` ABI parameter
+        :param str choice: The `choice` ABI parameter
+        :param algokit_utils.TransactionParameters transaction_parameters: (optional) Additional transaction parameters
+        :returns Composer: This Composer instance"""
+
+        args = StartGameArgs(
+            payment=payment,
+            choice=choice,
+        )
+        self.app_client.compose_call(
+            self.atc,
+            call_abi_method=args.method(),
+            transaction_parameters=_convert_call_transaction_parameters(transaction_parameters),
+            **_as_dict(args, convert_all=True),
+        )
+        return self
+
     def create_bare(
         self,
         *,
@@ -227,6 +356,23 @@ class Composer:
             self.atc,
             call_abi_method=False,
             transaction_parameters=_convert_create_transaction_parameters(transaction_parameters, on_complete),
+        )
+        return self
+
+    def opt_in_bare(
+        self,
+        *,
+        transaction_parameters: algokit_utils.TransactionParameters | None = None,
+    ) -> "Composer":
+        """Adds a calls to the opt_in bare method
+        
+        :param algokit_utils.TransactionParameters transaction_parameters: (optional) Additional transaction parameters
+        :returns Composer: This Composer instance"""
+
+        self.app_client.compose_opt_in(
+            self.atc,
+            call_abi_method=False,
+            transaction_parameters=_convert_transaction_parameters(transaction_parameters),
         )
         return self
 
@@ -370,6 +516,18 @@ class CoinflipClient:
     def suggested_params(self, value: algosdk.transaction.SuggestedParams | None) -> None:
         self.app_client.suggested_params = value
 
+    def get_global_state(self) -> GlobalState:
+        """Returns the application's global state wrapped in a strongly typed class with options to format the stored value"""
+
+        state = typing.cast(dict[bytes, bytes | int], self.app_client.get_global_state(raw=True))
+        return GlobalState(state)
+
+    def get_local_state(self, account: str | None = None) -> LocalState:
+        """Returns the application's local state wrapped in a strongly typed class with options to format the stored value"""
+
+        state = typing.cast(dict[bytes, bytes | int], self.app_client.get_local_state(account, raw=True))
+        return LocalState(state)
+
     def hello(
         self,
         *,
@@ -384,6 +542,33 @@ class CoinflipClient:
 
         args = HelloArgs(
             name=name,
+        )
+        result = self.app_client.call(
+            call_abi_method=args.method(),
+            transaction_parameters=_convert_call_transaction_parameters(transaction_parameters),
+            **_as_dict(args, convert_all=True),
+        )
+        return result
+
+    def start_game(
+        self,
+        *,
+        payment: TransactionWithSigner,
+        choice: str,
+        transaction_parameters: algokit_utils.TransactionParameters | None = None,
+    ) -> algokit_utils.ABITransactionResponse[str]:
+        """Player A initiates the game, he pays the wager he wants for the game and then chooses the side of the coin ("Heads" or "Tails"
+        
+        Calls `start_game(pay,string)string` ABI method
+        
+        :param TransactionWithSigner payment: The `payment` ABI parameter
+        :param str choice: The `choice` ABI parameter
+        :param algokit_utils.TransactionParameters transaction_parameters: (optional) Additional transaction parameters
+        :returns algokit_utils.ABITransactionResponse[str]: The result of the transaction"""
+
+        args = StartGameArgs(
+            payment=payment,
+            choice=choice,
         )
         result = self.app_client.call(
             call_abi_method=args.method(),
@@ -407,6 +592,22 @@ class CoinflipClient:
         result = self.app_client.create(
             call_abi_method=False,
             transaction_parameters=_convert_create_transaction_parameters(transaction_parameters, on_complete),
+        )
+        return result
+
+    def opt_in_bare(
+        self,
+        *,
+        transaction_parameters: algokit_utils.TransactionParameters | None = None,
+    ) -> algokit_utils.TransactionResponse:
+        """Calls the opt_in bare method
+        
+        :param algokit_utils.TransactionParameters transaction_parameters: (optional) Additional transaction parameters
+        :returns algokit_utils.TransactionResponse: The result of the transaction"""
+
+        result = self.app_client.opt_in(
+            call_abi_method=False,
+            transaction_parameters=_convert_transaction_parameters(transaction_parameters),
         )
         return result
 

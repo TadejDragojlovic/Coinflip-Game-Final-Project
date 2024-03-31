@@ -12,6 +12,23 @@
             "returns": {
                 "type": "string"
             }
+        },
+        {
+            "name": "start_game",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment"
+                },
+                {
+                    "type": "string",
+                    "name": "choice"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            },
+            "desc": "Player A initiates the game, he pays the wager he wants for the game and then chooses the side of the coin (\"Heads\" or \"Tails\""
         }
     ],
     "networks": {}
