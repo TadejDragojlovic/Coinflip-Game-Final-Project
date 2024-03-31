@@ -1,5 +1,6 @@
 import beaker
 import pyteal as pt
+import random
 
 """
 Author: Tadej Dragojlovic
@@ -100,6 +101,8 @@ def join_game(payment: pt.abi.PaymentTransaction, *, output: pt.abi.String) -> p
     Player B joins the game, gets the side that's left (player A picks first), pays the wager and waits for the game to resolve by player A
     """
 
+    # NOTE: Currently player A can join on the player B slot too, fix this
+
     return pt.Seq(
         pt.Assert(
             pt.And(
@@ -118,6 +121,74 @@ def join_game(payment: pt.abi.PaymentTransaction, *, output: pt.abi.String) -> p
         app.state.player_b_choice.set(leftover_side(app.state.player_a_choice.get())),
 
         output.set(pt.Bytes("200.")),
+    )
+
+@app.external(authorize = beaker.Authorize.opted_in())
+def resolve(*, output: pt.abi.String) -> pt.Expr:
+    """
+    Player A resolves the game, win counter updates and the wager pays out to the player who won
+    """
+    player_a = pt.ScratchVar(pt.TealType.bytes)
+    player_b = pt.ScratchVar(pt.TealType.bytes)
+    winner = pt.ScratchVar(pt.TealType.bytes)
+    
+    return pt.Seq(
+        player_a.store(app.state.player_a_account),
+        player_b.store(app.state.player_b_account),
+
+        pt.Assert(
+            pt.And(
+                player_a.load() == pt.Txn.sender(), # Checking whether it is actually player A who initiates this method
+                player_b.load() != pt.Bytes("Empty"), # Checking whether all the slots are filled
+                # TODO: anything else needed here?
+            )
+        ),
+
+        winner.store(decide_winner(player_a.load(), player_b.load())),
+        payout(app.state.wager.get(), winner.load()),
+        app.state.player_games_won[winner.load()].set(pt.Int(1)),
+    )
+
+@app.external(authorize = beaker.Authorize.opted_in())
+def check_wins(*, output: pt.abi.Uint64) -> pt.Expr:
+    """
+    Check personal number of coinflip wins
+    """
+
+    return output.set(app.state.player_games_won.get())
+
+@pt.Subroutine(pt.TealType.bytes)
+def decide_winner(player_a: pt.Expr, player_b: pt.Expr) -> pt.Expr:
+    """
+    Suborutine that chooses randomly between 1 (Heads) or 2 (Tails), and decides the winner of the coinflip (winner is [0,1] == [A,B])
+    """
+
+    # This is done in vanilla python because nothing here needs to be saved no the chain, just a quick way to process the winner
+    rng = random.randint(1,2)
+    rng = "Heads" if rng==1 else "Tails"
+
+    return pt.Seq(
+        pt.If(app.state.player_a_choice.get() == pt.Bytes(rng))
+        .Then(player_a)
+        .Else(player_b)
+    )
+
+@pt.Subroutine(pt.TealType.none)
+def payout(wager: pt.Expr, winner_account: pt.Expr) -> pt.Expr:
+    """
+    Subroutine that pays out the winner
+    """
+
+    return pt.Seq(
+        pt.InnerTxnBuilder.Begin(),
+        pt.InnerTxnBuilder.SetFields(
+            {
+                pt.TxnField.type_enum: pt.TxnType.Payment,
+                pt.TxnField.receiver: winner_account,
+                pt.TxnField.amount: pt.Int(2)*wager - pt.Txn.fee(),
+            }
+        ),
+        pt.InnerTxnBuilder.Submit(),
     )
 
 @pt.Subroutine(pt.TealType.bytes)
