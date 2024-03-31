@@ -1,6 +1,6 @@
 #pragma version 8
 intcblock 0 1
-bytecblock 0x 0x706c617965725f615f6163636f756e74 0x456d707479 0x706c617965725f615f63686f696365 0x7761676572 0x151f7c75 0x706c617965725f625f6163636f756e74 0x4e6f742063686f73656e20796574 0x706c617965725f67616d65735f776f6e 0x706c617965725f625f63686f696365 0x5461696c73 0x4865616473
+bytecblock 0x 0x706c617965725f615f6163636f756e74 0x456d707479 0x706c617965725f615f63686f696365 0x706c617965725f625f6163636f756e74 0x7761676572 0x151f7c75 0x4e6f742063686f73656e20796574 0x706c617965725f67616d65735f776f6e 0x706c617965725f625f63686f696365 0x4865616473
 txn NumAppArgs
 intc_0 // 0
 ==
@@ -140,13 +140,13 @@ app_global_put
 bytec_3 // "player_a_choice"
 bytec 7 // "Not chosen yet"
 app_global_put
-bytec 6 // "player_b_account"
+bytec 4 // "player_b_account"
 bytec_2 // "Empty"
 app_global_put
 bytec 9 // "player_b_choice"
 bytec 7 // "Not chosen yet"
 app_global_put
-bytec 4 // "wager"
+bytec 5 // "wager"
 intc_0 // 0
 app_global_put
 retsub
@@ -154,6 +154,28 @@ retsub
 // opt_in
 optin_2:
 proto 0 0
+bytec_1 // "player_a_account"
+app_global_get
+bytec_2 // "Empty"
+==
+bnz optin_2_l4
+bytec 4 // "player_b_account"
+app_global_get
+bytec_2 // "Empty"
+==
+bnz optin_2_l3
+intc_0 // 0
+return
+optin_2_l3:
+bytec 4 // "player_b_account"
+txn Sender
+app_global_put
+b optin_2_l5
+optin_2_l4:
+bytec_1 // "player_a_account"
+txn Sender
+app_global_put
+optin_2_l5:
 txn Sender
 bytec 8 // "player_games_won"
 intc_0 // 0
@@ -172,7 +194,7 @@ assert
 intc_1 // pay
 intc_1 // pay
 ==
-bytec 4 // "wager"
+bytec 5 // "wager"
 app_global_get
 intc_0 // 0
 ==
@@ -180,11 +202,6 @@ intc_0 // 0
 frame_dig -2
 gtxns Receiver
 global CurrentApplicationAddress
-==
-&&
-bytec_1 // "player_a_account"
-app_global_get
-bytec_2 // "Empty"
 ==
 &&
 bytec_3 // "player_a_choice"
@@ -200,7 +217,7 @@ bytec_3 // "player_a_choice"
 frame_dig -1
 extract 2 0
 app_global_put
-bytec 4 // "wager"
+bytec 5 // "wager"
 frame_dig -2
 gtxns Amount
 app_global_put
@@ -229,32 +246,27 @@ intc_1 // pay
 ==
 bytec_1 // "player_a_account"
 app_global_get
-bytec_2 // "Empty"
-!=
-&&
-bytec 6 // "player_b_account"
-app_global_get
-bytec_2 // "Empty"
-==
-&&
-bytec_1 // "player_a_account"
-app_global_get
 txn Sender
 !=
+&&
+bytec 9 // "player_b_choice"
+app_global_get
+bytec 7 // "Not chosen yet"
+==
 &&
 frame_dig -1
 gtxns Receiver
 global CurrentApplicationAddress
 ==
 &&
-bytec 4 // "wager"
+bytec 5 // "wager"
 app_global_get
 frame_dig -1
 gtxns Amount
 ==
 &&
 assert
-bytec 6 // "player_b_account"
+bytec 4 // "player_b_account"
 txn Sender
 app_global_put
 bytec 9 // "player_b_choice"
@@ -284,29 +296,29 @@ app_opted_in
 assert
 bytec_1 // "player_a_account"
 app_global_get
-store 0
-frame_dig -1
-txnas Accounts
-store 1
-load 0
 txn Sender
 ==
-bytec 6 // "player_b_account"
+bytec 4 // "player_b_account"
 app_global_get
 bytec_2 // "Empty"
 !=
 &&
 assert
 callsub decidewinner_7
-store 2
-bytec 4 // "wager"
+store 0
+bytec 5 // "wager"
 app_global_get
-load 2
+load 0
 callsub payout_8
-load 2
+load 0
 txnas Accounts
 bytec 8 // "player_games_won"
+load 0
+txnas Accounts
+bytec 8 // "player_games_won"
+app_local_get
 intc_1 // 1
++
 app_local_put
 retsub
 
@@ -330,7 +342,7 @@ decidewinner_7:
 proto 0 1
 bytec_3 // "player_a_choice"
 app_global_get
-bytec 10 // "Tails"
+bytec 10 // "Heads"
 ==
 bnz decidewinner_7_l2
 intc_1 // 1
@@ -362,13 +374,13 @@ retsub
 leftoverside_9:
 proto 1 1
 frame_dig -1
-bytec 11 // "Heads"
+bytec 10 // "Heads"
 ==
 bnz leftoverside_9_l2
-bytec 11 // "Heads"
+bytec 10 // "Heads"
 b leftoverside_9_l3
 leftoverside_9_l2:
-bytec 10 // "Tails"
+pushbytes 0x5461696c73 // "Tails"
 leftoverside_9_l3:
 retsub
 
@@ -382,7 +394,7 @@ frame_bury 1
 frame_dig 1
 callsub hello_0
 frame_bury 0
-bytec 5 // 0x151f7c75
+bytec 6 // 0x151f7c75
 frame_dig 0
 concat
 log
@@ -409,7 +421,7 @@ frame_dig 1
 frame_dig 2
 callsub startgame_3
 frame_bury 0
-bytec 5 // 0x151f7c75
+bytec 6 // 0x151f7c75
 frame_dig 0
 concat
 log
@@ -432,7 +444,7 @@ assert
 frame_dig 1
 callsub joingame_4
 frame_bury 0
-bytec 5 // 0x151f7c75
+bytec 6 // 0x151f7c75
 frame_dig 0
 concat
 log
@@ -450,7 +462,7 @@ frame_bury 1
 frame_dig 1
 callsub resolve_5
 frame_bury 0
-bytec 5 // 0x151f7c75
+bytec 6 // 0x151f7c75
 frame_dig 0
 concat
 log
@@ -462,7 +474,7 @@ proto 0 0
 intc_0 // 0
 callsub checkwins_6
 frame_bury 0
-bytec 5 // 0x151f7c75
+bytec 6 // 0x151f7c75
 frame_dig 0
 itob
 concat

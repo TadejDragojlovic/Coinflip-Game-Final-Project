@@ -7,7 +7,7 @@ Author: Tadej Dragojlovic
 Created: 31/03/2024
 """
 
-# TODO: Find a way to skip the process of putting in the application address when paying the wager
+# TODO: Add subroutine/method that clears all the global state data so the game can be started again after it's finished?
 
 class CoinflipState:
     player_a_choice = beaker.GlobalStateValue(
@@ -63,7 +63,13 @@ def opt_in() -> pt.Expr:
     """ Optin method """
 
     return pt.Seq(
-        # TODO: check using conditional statements whether we need to fill player a slot, player b, or if it's full
+
+        # During optin we fill in the slots for the game (first to optin is player A, second is player B, the rest are disallowed from opting in)
+        pt.If(app.state.player_a_account.get() == pt.Bytes("Empty"))
+        .Then(app.state.player_a_account.set(pt.Txn.sender()))
+        .ElseIf(app.state.player_b_account.get() == pt.Bytes("Empty"))
+        .Then(app.state.player_b_account.set(pt.Txn.sender()))
+        .Else(pt.Reject()),
 
         app.initialize_local_state(addr=pt.Txn.sender())
     )
@@ -80,7 +86,6 @@ def start_game(payment: pt.abi.PaymentTransaction, choice: pt.abi.String, *, out
                 payment.type_spec().txn_type_enum() == pt.TxnType.Payment, # Making sure it's the correct TRANSACTION TYPE
                 app.state.wager.get() == pt.Int(0),
                 payment.get().receiver() == pt.Global.current_application_address(), # Making sure the user put the correct application address
-                app.state.player_a_account.get() == pt.Bytes("Empty"),
                 app.state.player_a_choice.get() == pt.Bytes("Not chosen yet"),
             )
 
@@ -108,11 +113,8 @@ def join_game(payment: pt.abi.PaymentTransaction, *, output: pt.abi.String) -> p
             pt.And(
                 payment.type_spec().txn_type_enum() == pt.TxnType.Payment,
 
-                # Making sure that the slot B isn't filled and that slot A is
-                app.state.player_a_account.get() != pt.Bytes("Empty"), 
-                app.state.player_b_account.get() == pt.Bytes("Empty"),
-
-                app.state.player_a_account.get() != pt.Txn.sender(),
+                app.state.player_a_account != pt.Txn.sender(), # With this we disallow player A to fill both slots
+                app.state.player_b_choice.get() == pt.Bytes("Not chosen yet"),
 
                 payment.get().receiver() == pt.Global.current_application_address(),
                 app.state.wager.get() == payment.get().amount(),
@@ -131,17 +133,13 @@ def resolve(opp: pt.abi.Account, *, output: pt.abi.String) -> pt.Expr:
     Player A resolves the game, win counter updates and the wager pays out to the player who won
     """
 
-    player_a = pt.ScratchVar(pt.TealType.bytes)
-    player_b = pt.ScratchVar(pt.TealType.bytes)
     winner = pt.ScratchVar(pt.TealType.uint64)
     
     return pt.Seq(
-        player_a.store(app.state.player_a_account),
-        player_b.store(opp.address()),
 
         pt.Assert(
             pt.And(
-                player_a.load() == pt.Txn.sender(), # Checking whether it is actually player A who initiates this method
+                app.state.player_a_account.get() == pt.Txn.sender(),   # Checking whether it is actually player A who initiates this method
                 app.state.player_b_account.get() != pt.Bytes("Empty"), # Checking whether all the slots are filled
                 # TODO: anything else needed here?
             )
@@ -149,7 +147,7 @@ def resolve(opp: pt.abi.Account, *, output: pt.abi.String) -> pt.Expr:
 
         winner.store(decide_winner()),
         payout(app.state.wager.get(), winner.load()),
-        app.state.player_games_won[pt.Txn.accounts[winner.load()]].set(pt.Int(1)),
+        app.state.player_games_won[pt.Txn.accounts[winner.load()]].set(app.state.player_games_won[pt.Txn.accounts[winner.load()]].get() + pt.Int(1)),
     )
 
 @app.external(authorize = beaker.Authorize.opted_in())
