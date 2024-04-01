@@ -88,17 +88,13 @@ def start_game(payment: pt.abi.PaymentTransaction, choice: pt.abi.String, *, out
                 payment.get().receiver() == pt.Global.current_application_address(), # Making sure the user put the correct application address
                 app.state.player_a_choice.get() == pt.Bytes("Not chosen yet"),
 
-                # TODO: Need to add checks whether user inputed the side correctly (heads/tails in any form should be allowed)
-
+                # Checks whether the userer inputed a side for the coinflip correctly (heads/tails in any form should be allowed)
                 check_correct_input(choice.get()) == pt.Int(1),
             )
 
         ),
 
         app.state.player_a_account.set(pt.Txn.sender()),
-
-        # TODO: if the user inputed the correct word (tails/heads) but in improper form (HEAds, HEADS, hEaDS, etc.), transform into correct using subroutine
-        # app.state.player_a_choice.set(choice.get()),
 
         app.state.wager.set(payment.get().amount()),
 
@@ -144,7 +140,6 @@ def resolve(opp: pt.abi.Account, *, output: pt.abi.String) -> pt.Expr:
             pt.And(
                 app.state.player_a_account.get() == pt.Txn.sender(),   # Checking whether it is actually player A who initiates this method
                 app.state.player_b_account.get() != pt.Bytes("Empty"), # Checking whether all the slots are filled
-                # TODO: anything else needed here?
             )
         ),
 
@@ -206,72 +201,66 @@ def leftover_side(player_a_choice: pt.Expr) -> pt.Expr:
 @pt.Subroutine(pt.TealType.uint64)
 def check_correct_input(input: pt.Expr) -> pt.Expr:
     """
+    Function that checks whether the input is correct when choosing a side for the coinflip
+    Any form is accepted if the word is correctly spelled (HEADS, heads, HEadS, etc.)
+    Returns pt.Int(1) if the input is correct, otherwise pt.Int(0)
     """
-
-    # NOTE: This might be excess subroutine, figure out
 
     input_tolower = pt.ScratchVar(pt.TealType.bytes)
 
     return pt.Seq(
-        input_tolower.store(byteslice_tolower(input)),
+        input_tolower.store(to_lower(input)),
 
-        app.state.player_a_choice.set(input_tolower.load()),
-
-        pt.Int(1),
-    )
-
-# TODO: Add description for all the remaining subroutines/methods
-
-@pt.Subroutine(pt.TealType.none)
-def byteslice_tolower(byteslice: pt.Expr) -> pt.Expr:
-    """
-    """
-    # pt.GetByte(choice.get(), pt.Int(0)) == pt.Int(65),
-
-    i = pt.ScratchVar(pt.TealType.uint64)
-    curr_byte = pt.ScratchVar(pt.TealType.uint64)
-    tmp = pt.ScratchVar(pt.TealType.bytes)
-
-    i.store(pt.Int(0)),
-
-    return pt.Seq(
-        [
-            pt.For(
-                i.store(pt.Int(0)),
-                i.load() < pt.Len(byteslice),
-                i.store(i.load()+pt.Int(1)),
-            ).Do(
-                pt.Seq(
-                    [
-                        curr_byte.store(pt.GetByte(byteslice, i.load())),
-
-                        pt.If(
-                            pt.And(
-                                curr_byte.load() >= pt.Int(65),
-                                curr_byte.load() <= pt.Int(90),
-                            )
-                        ).Then(
-                            # NOTE:
-                            # - This for loop doesn't work, the value that is written in the "player_a_choice" is the original,
-                            # for some reason it doesn't register the change from `byte_tolower()`, more specifically from `pt.SetByte()` function.
-                            # - Could simply use recursion and do it that way, but need to resolve this issue.
-                            app.state.player_a_choice.set(byte_tolower(byteslice, i.load(), curr_byte.load())),
-                        )
-
-                    ]
-                )
-
+        pt.If(
+            pt.Or(
+                input_tolower.load() == pt.Bytes("heads"),
+                input_tolower.load() == pt.Bytes("tails"),
+            )
+        )
+        .Then(
+            pt.Cond(
+                [input_tolower.load() == pt.Bytes("heads"), app.state.player_a_choice.set(pt.Bytes("Heads"))],
+                [input_tolower.load() == pt.Bytes("tails"), app.state.player_a_choice.set(pt.Bytes("Tails"))],
             ),
 
-            # NOTE: returning byteslice, but it remains the same as the original which is not correct
-            byteslice,
-        ]
+            pt.Int(1),
+        )
+        .Else(
+            pt.Int(0),
+        )
     )
-    # return byte_tolower(byteslice, pt.Int(0), pt.GetByte(byteslice, pt.Int(0)))
 
 @pt.Subroutine(pt.TealType.bytes)
-def byte_tolower(byteslice: pt.Expr, index: pt.Expr, byte: pt.Expr) -> pt.Expr:
+def to_lower(input: pt.Expr) -> pt.Expr:
     """
+    Wrapper for the recursive function
     """
 
-    return pt.SetByte(byteslice, index, pt.Int(32)+byte)
+    return rtl(input, pt.Int(0), pt.Len(input))
+
+@pt.Subroutine(pt.TealType.bytes)
+def rtl(input: pt.Expr, index: pt.Expr, len: pt.Expr) -> pt.Expr:
+    """
+    "rtl" stands for "Recursively to lower", if we encounter any Byte in the byteslice that is between 65 ("A") and 90 ("Z"),
+    we simply set that byte to it's lowercase equal (+32 in the ascii table)
+    """
+
+    return pt.Seq(
+        pt.If( index >= len )
+        .Then(
+            input,
+        ).Else(
+            pt.If(
+                pt.And(
+                    pt.GetByte(input, index) >= pt.Int(65),
+                    pt.GetByte(input, index) <= pt.Int(90),
+                )
+            )
+            .Then(
+                rtl(pt.SetByte(input, index, pt.GetByte(input, index)+pt.Int(32)), index+pt.Int(1), len)
+            )
+            .Else(
+                rtl(input, index+pt.Int(1), len)
+            )
+        )
+    )
