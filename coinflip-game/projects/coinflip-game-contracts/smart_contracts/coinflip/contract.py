@@ -10,13 +10,13 @@ Created: 31/03/2024
 # TODO: Add subroutine/method that clears all the global state data so the game can be started again after it's finished?
 
 class CoinflipState:
-    player_a_choice = beaker.GlobalStateValue(
+    player_a_side = beaker.GlobalStateValue(
         stack_type = pt.TealType.bytes,
         descr = "First player's side of the coin",
         default = pt.Bytes("Not chosen yet"),
     )
 
-    player_b_choice = beaker.GlobalStateValue(
+    player_b_side = beaker.GlobalStateValue(
         stack_type = pt.TealType.bytes,
         descr = "Second player's side of the coin",
         default = pt.Bytes("Not chosen yet"),
@@ -86,7 +86,7 @@ def start_game(payment: pt.abi.PaymentTransaction, choice: pt.abi.String, *, out
                 payment.type_spec().txn_type_enum() == pt.TxnType.Payment, # Making sure it's the correct TRANSACTION TYPE
                 app.state.wager.get() == pt.Int(0),
                 payment.get().receiver() == pt.Global.current_application_address(), # Making sure the user put the correct application address
-                app.state.player_a_choice.get() == pt.Bytes("Not chosen yet"),
+                app.state.player_a_side.get() == pt.Bytes("Not chosen yet"),
 
                 # Checks whether the userer inputed a side for the coinflip correctly (heads/tails in any form should be allowed)
                 check_correct_input(choice.get()) == pt.Int(1),
@@ -113,7 +113,7 @@ def join_game(payment: pt.abi.PaymentTransaction, *, output: pt.abi.String) -> p
                 payment.type_spec().txn_type_enum() == pt.TxnType.Payment,
 
                 app.state.player_a_account != pt.Txn.sender(), # With this we disallow player A to fill both slots
-                app.state.player_b_choice.get() == pt.Bytes("Not chosen yet"),
+                app.state.player_b_side.get() == pt.Bytes("Not chosen yet"),
 
                 payment.get().receiver() == pt.Global.current_application_address(),
                 app.state.wager.get() == payment.get().amount(),
@@ -121,7 +121,7 @@ def join_game(payment: pt.abi.PaymentTransaction, *, output: pt.abi.String) -> p
         ),
 
         app.state.player_b_account.set(pt.Txn.sender()),
-        app.state.player_b_choice.set(leftover_side(app.state.player_a_choice.get())),
+        app.state.player_b_side.set(leftover_side(app.state.player_a_side.get())),
 
         output.set(pt.Bytes("200.")),
     )
@@ -145,6 +145,8 @@ def resolve(opp: pt.abi.Account, *, output: pt.abi.String) -> pt.Expr:
 
         winner.store(decide_winner()),
         payout(app.state.wager.get(), winner.load()),
+
+        # Incrementing the counter for games won
         app.state.player_games_won[pt.Txn.accounts[winner.load()]].set(app.state.player_games_won[pt.Txn.accounts[winner.load()]].get() + pt.Int(1)),
     )
 
@@ -167,7 +169,7 @@ def decide_winner() -> pt.Expr:
     rng = "Heads" if rng==1 else "Tails"
 
     return pt.Seq(
-        pt.If(app.state.player_a_choice.get() == pt.Bytes(rng))
+        pt.If(app.state.player_a_side.get() == pt.Bytes(rng))
         .Then(pt.Int(0))
         .Else(pt.Int(1))
     )
@@ -187,13 +189,13 @@ def payout(wager: pt.Expr, winner_index: pt.Expr) -> pt.Expr:
     )
 
 @pt.Subroutine(pt.TealType.bytes)
-def leftover_side(player_a_choice: pt.Expr) -> pt.Expr:
+def leftover_side(player_a_side: pt.Expr) -> pt.Expr:
     """
     Simple helper function that returns the leftover side of the coin
     """
 
     return pt.Seq(
-        pt.If(player_a_choice == pt.Bytes("Heads"))
+        pt.If(player_a_side == pt.Bytes("Heads"))
         .Then(pt.Bytes("Tails"))
         .Else(pt.Bytes("Heads"))
     )
@@ -219,8 +221,8 @@ def check_correct_input(input: pt.Expr) -> pt.Expr:
         )
         .Then(
             pt.Cond(
-                [input_tolower.load() == pt.Bytes("heads"), app.state.player_a_choice.set(pt.Bytes("Heads"))],
-                [input_tolower.load() == pt.Bytes("tails"), app.state.player_a_choice.set(pt.Bytes("Tails"))],
+                [input_tolower.load() == pt.Bytes("heads"), app.state.player_a_side.set(pt.Bytes("Heads"))],
+                [input_tolower.load() == pt.Bytes("tails"), app.state.player_a_side.set(pt.Bytes("Tails"))],
             ),
 
             pt.Int(1),
@@ -231,36 +233,40 @@ def check_correct_input(input: pt.Expr) -> pt.Expr:
     )
 
 @pt.Subroutine(pt.TealType.bytes)
-def to_lower(input: pt.Expr) -> pt.Expr:
+def to_lower(byteslice: pt.Expr) -> pt.Expr:
     """
     Wrapper for the recursive function
     """
 
-    return rtl(input, pt.Int(0), pt.Len(input))
+    return rtl(byteslice, pt.Int(0), pt.Len(byteslice))
 
 @pt.Subroutine(pt.TealType.bytes)
-def rtl(input: pt.Expr, index: pt.Expr, len: pt.Expr) -> pt.Expr:
+def rtl(byteslice: pt.Expr, index: pt.Expr, len: pt.Expr) -> pt.Expr:
     """
     "rtl" stands for "Recursively to lower", if we encounter any Byte in the byteslice that is between 65 ("A") and 90 ("Z"),
     we simply set that byte to it's lowercase equal (+32 in the ascii table)
     """
 
+    curr_byte = pt.ScratchVar(pt.TealType.uint64)
+
     return pt.Seq(
         pt.If( index >= len )
         .Then(
-            input,
+            byteslice,
         ).Else(
+            curr_byte.store(pt.GetByte(byteslice, index)),
+
             pt.If(
                 pt.And(
-                    pt.GetByte(input, index) >= pt.Int(65),
-                    pt.GetByte(input, index) <= pt.Int(90),
+                    curr_byte.load() >= pt.Int(65),
+                    curr_byte.load() <= pt.Int(90),
                 )
             )
             .Then(
-                rtl(pt.SetByte(input, index, pt.GetByte(input, index)+pt.Int(32)), index+pt.Int(1), len)
+                rtl(pt.SetByte(byteslice, index, curr_byte.load()+pt.Int(32)), index+pt.Int(1), len)
             )
             .Else(
-                rtl(input, index+pt.Int(1), len)
+                rtl(byteslice, index+pt.Int(1), len)
             )
         )
     )
