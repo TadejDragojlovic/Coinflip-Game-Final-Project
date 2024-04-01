@@ -1,0 +1,171 @@
+{
+    "hints": {
+        "hello(string)string": {
+            "call_config": {
+                "no_op": "CALL"
+            }
+        },
+        "start_game(pay,string)string": {
+            "call_config": {
+                "no_op": "CALL"
+            }
+        },
+        "join_game(pay)string": {
+            "call_config": {
+                "no_op": "CALL"
+            }
+        },
+        "resolve(account)string": {
+            "call_config": {
+                "no_op": "CALL"
+            }
+        },
+        "check_wins()uint64": {
+            "call_config": {
+                "no_op": "CALL"
+            }
+        },
+        "reset_game()string": {
+            "call_config": {
+                "no_op": "CALL"
+            }
+        }
+    },
+    "source": {
+        "approval": "I3ByYWdtYSB2ZXJzaW9uIDgKaW50Y2Jsb2NrIDAgMQpieXRlY2Jsb2NrIDB4IDB4NzA2YzYxNzk2NTcyNWY2MTVmNjE2MzYzNmY3NTZlNzQgMHg0NTZkNzA3NDc5IDB4NGU2Zjc0MjA2MzY4NmY3MzY1NmUyMDc5NjU3NCAweDcwNmM2MTc5NjU3MjVmNjI1ZjYxNjM2MzZmNzU2ZTc0IDB4Nzc2MTY3NjU3MiAweDE1MWY3Yzc1IDB4NzA2YzYxNzk2NTcyNWY2MTVmNzM2OTY0NjUgMHg3MDZjNjE3OTY1NzI1ZjYyNWY3MzY5NjQ2NSAweDcwNmM2MTc5NjU3MjVmNjc2MTZkNjU3MzVmNzc2ZjZlIDB4NTQ2MTY5NmM3MyAweDQ4NjU2MTY0NzMKdHhuIE51bUFwcEFyZ3MKaW50Y18wIC8vIDAKPT0KYm56IG1haW5fbDE0CnR4bmEgQXBwbGljYXRpb25BcmdzIDAKcHVzaGJ5dGVzIDB4MDJiZWNlMTEgLy8gImhlbGxvKHN0cmluZylzdHJpbmciCj09CmJueiBtYWluX2wxMwp0eG5hIEFwcGxpY2F0aW9uQXJncyAwCnB1c2hieXRlcyAweDI5ODg5MTNmIC8vICJzdGFydF9nYW1lKHBheSxzdHJpbmcpc3RyaW5nIgo9PQpibnogbWFpbl9sMTIKdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMApwdXNoYnl0ZXMgMHhjNjI3YzQyYyAvLyAiam9pbl9nYW1lKHBheSlzdHJpbmciCj09CmJueiBtYWluX2wxMQp0eG5hIEFwcGxpY2F0aW9uQXJncyAwCnB1c2hieXRlcyAweDBlMzNmZmJjIC8vICJyZXNvbHZlKGFjY291bnQpc3RyaW5nIgo9PQpibnogbWFpbl9sMTAKdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMApwdXNoYnl0ZXMgMHg1ODU0Y2FjNiAvLyAiY2hlY2tfd2lucygpdWludDY0Igo9PQpibnogbWFpbl9sOQp0eG5hIEFwcGxpY2F0aW9uQXJncyAwCnB1c2hieXRlcyAweGE3Y2M2YzZjIC8vICJyZXNldF9nYW1lKClzdHJpbmciCj09CmJueiBtYWluX2w4CmVycgptYWluX2w4Ogp0eG4gT25Db21wbGV0aW9uCmludGNfMCAvLyBOb09wCj09CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCiE9CiYmCmFzc2VydApjYWxsc3ViIHJlc2V0Z2FtZWNhc3Rlcl8xNgppbnRjXzEgLy8gMQpyZXR1cm4KbWFpbl9sOToKdHhuIE9uQ29tcGxldGlvbgppbnRjXzAgLy8gTm9PcAo9PQp0eG4gQXBwbGljYXRpb25JRAppbnRjXzAgLy8gMAohPQomJgphc3NlcnQKY2FsbHN1YiBjaGVja3dpbnNjYXN0ZXJfMTUKaW50Y18xIC8vIDEKcmV0dXJuCm1haW5fbDEwOgp0eG4gT25Db21wbGV0aW9uCmludGNfMCAvLyBOb09wCj09CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCiE9CiYmCmFzc2VydApjYWxsc3ViIHJlc29sdmVjYXN0ZXJfMTQKaW50Y18xIC8vIDEKcmV0dXJuCm1haW5fbDExOgp0eG4gT25Db21wbGV0aW9uCmludGNfMCAvLyBOb09wCj09CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCiE9CiYmCmFzc2VydApjYWxsc3ViIGpvaW5nYW1lY2FzdGVyXzEzCmludGNfMSAvLyAxCnJldHVybgptYWluX2wxMjoKdHhuIE9uQ29tcGxldGlvbgppbnRjXzAgLy8gTm9PcAo9PQp0eG4gQXBwbGljYXRpb25JRAppbnRjXzAgLy8gMAohPQomJgphc3NlcnQKY2FsbHN1YiBzdGFydGdhbWVjYXN0ZXJfMTIKaW50Y18xIC8vIDEKcmV0dXJuCm1haW5fbDEzOgp0eG4gT25Db21wbGV0aW9uCmludGNfMCAvLyBOb09wCj09CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCiE9CiYmCmFzc2VydApjYWxsc3ViIGhlbGxvY2FzdGVyXzExCmludGNfMSAvLyAxCnJldHVybgptYWluX2wxNDoKdHhuIE9uQ29tcGxldGlvbgppbnRjXzAgLy8gTm9PcAo9PQpibnogbWFpbl9sMTgKdHhuIE9uQ29tcGxldGlvbgppbnRjXzEgLy8gT3B0SW4KPT0KYm56IG1haW5fbDE3CmVycgptYWluX2wxNzoKdHhuIEFwcGxpY2F0aW9uSUQKaW50Y18wIC8vIDAKIT0KYXNzZXJ0CmNhbGxzdWIgb3B0aW5fMgppbnRjXzEgLy8gMQpyZXR1cm4KbWFpbl9sMTg6CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCj09CmFzc2VydApjYWxsc3ViIGNyZWF0ZV8xCmludGNfMSAvLyAxCnJldHVybgoKLy8gaGVsbG8KaGVsbG9fMDoKcHJvdG8gMSAxCmJ5dGVjXzAgLy8gIiIKcHVzaGJ5dGVzIDB4NDg2NTZjNmM2ZjJjMjAgLy8gIkhlbGxvLCAiCmZyYW1lX2RpZyAtMQpleHRyYWN0IDIgMApjb25jYXQKZnJhbWVfYnVyeSAwCmZyYW1lX2RpZyAwCmxlbgppdG9iCmV4dHJhY3QgNiAwCmZyYW1lX2RpZyAwCmNvbmNhdApmcmFtZV9idXJ5IDAKcmV0c3ViCgovLyBjcmVhdGUKY3JlYXRlXzE6CnByb3RvIDAgMApieXRlY18xIC8vICJwbGF5ZXJfYV9hY2NvdW50IgpieXRlY18yIC8vICJFbXB0eSIKYXBwX2dsb2JhbF9wdXQKYnl0ZWMgNyAvLyAicGxheWVyX2Ffc2lkZSIKYnl0ZWNfMyAvLyAiTm90IGNob3NlbiB5ZXQiCmFwcF9nbG9iYWxfcHV0CmJ5dGVjIDQgLy8gInBsYXllcl9iX2FjY291bnQiCmJ5dGVjXzIgLy8gIkVtcHR5IgphcHBfZ2xvYmFsX3B1dApieXRlYyA4IC8vICJwbGF5ZXJfYl9zaWRlIgpieXRlY18zIC8vICJOb3QgY2hvc2VuIHlldCIKYXBwX2dsb2JhbF9wdXQKYnl0ZWMgNSAvLyAid2FnZXIiCmludGNfMCAvLyAwCmFwcF9nbG9iYWxfcHV0CnJldHN1YgoKLy8gb3B0X2luCm9wdGluXzI6CnByb3RvIDAgMApieXRlY18xIC8vICJwbGF5ZXJfYV9hY2NvdW50IgphcHBfZ2xvYmFsX2dldApieXRlY18yIC8vICJFbXB0eSIKPT0KYm56IG9wdGluXzJfbDQKYnl0ZWMgNCAvLyAicGxheWVyX2JfYWNjb3VudCIKYXBwX2dsb2JhbF9nZXQKYnl0ZWNfMiAvLyAiRW1wdHkiCj09CmJueiBvcHRpbl8yX2wzCmludGNfMCAvLyAwCnJldHVybgpvcHRpbl8yX2wzOgpieXRlYyA0IC8vICJwbGF5ZXJfYl9hY2NvdW50Igp0eG4gU2VuZGVyCmFwcF9nbG9iYWxfcHV0CmIgb3B0aW5fMl9sNQpvcHRpbl8yX2w0OgpieXRlY18xIC8vICJwbGF5ZXJfYV9hY2NvdW50Igp0eG4gU2VuZGVyCmFwcF9nbG9iYWxfcHV0Cm9wdGluXzJfbDU6CnR4biBTZW5kZXIKYnl0ZWMgOSAvLyAicGxheWVyX2dhbWVzX3dvbiIKaW50Y18wIC8vIDAKYXBwX2xvY2FsX3B1dApyZXRzdWIKCi8vIHN0YXJ0X2dhbWUKc3RhcnRnYW1lXzM6CnByb3RvIDIgMQpieXRlY18wIC8vICIiCnR4biBTZW5kZXIKZ2xvYmFsIEN1cnJlbnRBcHBsaWNhdGlvbklECmFwcF9vcHRlZF9pbgovLyB1bmF1dGhvcml6ZWQKYXNzZXJ0CmludGNfMSAvLyBwYXkKaW50Y18xIC8vIHBheQo9PQpieXRlYyA1IC8vICJ3YWdlciIKYXBwX2dsb2JhbF9nZXQKaW50Y18wIC8vIDAKPT0KJiYKZnJhbWVfZGlnIC0yCmd0eG5zIFJlY2VpdmVyCmdsb2JhbCBDdXJyZW50QXBwbGljYXRpb25BZGRyZXNzCj09CiYmCmJ5dGVjIDcgLy8gInBsYXllcl9hX3NpZGUiCmFwcF9nbG9iYWxfZ2V0CmJ5dGVjXzMgLy8gIk5vdCBjaG9zZW4geWV0Igo9PQomJgphc3NlcnQKYnl0ZWNfMSAvLyAicGxheWVyX2FfYWNjb3VudCIKdHhuIFNlbmRlcgphcHBfZ2xvYmFsX3B1dApieXRlYyA1IC8vICJ3YWdlciIKZnJhbWVfZGlnIC0yCmd0eG5zIEFtb3VudAphcHBfZ2xvYmFsX3B1dApwdXNoYnl0ZXMgMHg1Mzc1NjM2MzY1NzM3MzY2NzU2YzZjMmUgLy8gIlN1Y2Nlc3NmdWxsLiIKZnJhbWVfYnVyeSAwCmZyYW1lX2RpZyAwCmxlbgppdG9iCmV4dHJhY3QgNiAwCmZyYW1lX2RpZyAwCmNvbmNhdApmcmFtZV9idXJ5IDAKcmV0c3ViCgovLyBqb2luX2dhbWUKam9pbmdhbWVfNDoKcHJvdG8gMSAxCmJ5dGVjXzAgLy8gIiIKdHhuIFNlbmRlcgpnbG9iYWwgQ3VycmVudEFwcGxpY2F0aW9uSUQKYXBwX29wdGVkX2luCi8vIHVuYXV0aG9yaXplZAphc3NlcnQKaW50Y18xIC8vIHBheQppbnRjXzEgLy8gcGF5Cj09CmJ5dGVjXzEgLy8gInBsYXllcl9hX2FjY291bnQiCmFwcF9nbG9iYWxfZ2V0CnR4biBTZW5kZXIKIT0KJiYKYnl0ZWMgOCAvLyAicGxheWVyX2Jfc2lkZSIKYXBwX2dsb2JhbF9nZXQKYnl0ZWNfMyAvLyAiTm90IGNob3NlbiB5ZXQiCj09CiYmCmZyYW1lX2RpZyAtMQpndHhucyBSZWNlaXZlcgpnbG9iYWwgQ3VycmVudEFwcGxpY2F0aW9uQWRkcmVzcwo9PQomJgpieXRlYyA1IC8vICJ3YWdlciIKYXBwX2dsb2JhbF9nZXQKZnJhbWVfZGlnIC0xCmd0eG5zIEFtb3VudAo9PQomJgphc3NlcnQKYnl0ZWMgNCAvLyAicGxheWVyX2JfYWNjb3VudCIKdHhuIFNlbmRlcgphcHBfZ2xvYmFsX3B1dApieXRlYyA4IC8vICJwbGF5ZXJfYl9zaWRlIgpieXRlYyA3IC8vICJwbGF5ZXJfYV9zaWRlIgphcHBfZ2xvYmFsX2dldApjYWxsc3ViIGxlZnRvdmVyc2lkZV8xMAphcHBfZ2xvYmFsX3B1dApwdXNoYnl0ZXMgMHgzMjMwMzAyZSAvLyAiMjAwLiIKZnJhbWVfYnVyeSAwCmZyYW1lX2RpZyAwCmxlbgppdG9iCmV4dHJhY3QgNiAwCmZyYW1lX2RpZyAwCmNvbmNhdApmcmFtZV9idXJ5IDAKcmV0c3ViCgovLyByZXNvbHZlCnJlc29sdmVfNToKcHJvdG8gMSAxCmJ5dGVjXzAgLy8gIiIKdHhuIFNlbmRlcgpnbG9iYWwgQ3VycmVudEFwcGxpY2F0aW9uSUQKYXBwX29wdGVkX2luCi8vIHVuYXV0aG9yaXplZAphc3NlcnQKYnl0ZWNfMSAvLyAicGxheWVyX2FfYWNjb3VudCIKYXBwX2dsb2JhbF9nZXQKdHhuIFNlbmRlcgo9PQpieXRlYyA0IC8vICJwbGF5ZXJfYl9hY2NvdW50IgphcHBfZ2xvYmFsX2dldApieXRlY18yIC8vICJFbXB0eSIKIT0KJiYKYXNzZXJ0CmNhbGxzdWIgZGVjaWRld2lubmVyXzgKc3RvcmUgMApieXRlYyA1IC8vICJ3YWdlciIKYXBwX2dsb2JhbF9nZXQKbG9hZCAwCmNhbGxzdWIgcGF5b3V0XzkKbG9hZCAwCnR4bmFzIEFjY291bnRzCmJ5dGVjIDkgLy8gInBsYXllcl9nYW1lc193b24iCmxvYWQgMAp0eG5hcyBBY2NvdW50cwpieXRlYyA5IC8vICJwbGF5ZXJfZ2FtZXNfd29uIgphcHBfbG9jYWxfZ2V0CmludGNfMSAvLyAxCisKYXBwX2xvY2FsX3B1dApyZXRzdWIKCi8vIGNoZWNrX3dpbnMKY2hlY2t3aW5zXzY6CnByb3RvIDAgMQppbnRjXzAgLy8gMAp0eG4gU2VuZGVyCmdsb2JhbCBDdXJyZW50QXBwbGljYXRpb25JRAphcHBfb3B0ZWRfaW4KLy8gdW5hdXRob3JpemVkCmFzc2VydAp0eG4gU2VuZGVyCmJ5dGVjIDkgLy8gInBsYXllcl9nYW1lc193b24iCmFwcF9sb2NhbF9nZXQKZnJhbWVfYnVyeSAwCnJldHN1YgoKLy8gcmVzZXRfZ2FtZQpyZXNldGdhbWVfNzoKcHJvdG8gMCAxCmJ5dGVjXzAgLy8gIiIKdHhuIFNlbmRlcgpnbG9iYWwgQ3VycmVudEFwcGxpY2F0aW9uSUQKYXBwX29wdGVkX2luCi8vIHVuYXV0aG9yaXplZAphc3NlcnQKYnl0ZWNfMSAvLyAicGxheWVyX2FfYWNjb3VudCIKYnl0ZWNfMyAvLyAiTm90IGNob3NlbiB5ZXQiCmFwcF9nbG9iYWxfcHV0CmJ5dGVjIDQgLy8gInBsYXllcl9iX2FjY291bnQiCmJ5dGVjXzMgLy8gIk5vdCBjaG9zZW4geWV0IgphcHBfZ2xvYmFsX3B1dApieXRlYyA3IC8vICJwbGF5ZXJfYV9zaWRlIgpieXRlY18yIC8vICJFbXB0eSIKYXBwX2dsb2JhbF9wdXQKYnl0ZWMgOCAvLyAicGxheWVyX2Jfc2lkZSIKYnl0ZWNfMiAvLyAiRW1wdHkiCmFwcF9nbG9iYWxfcHV0CmJ5dGVjIDUgLy8gIndhZ2VyIgppbnRjXzAgLy8gMAphcHBfZ2xvYmFsX3B1dApwdXNoYnl0ZXMgMHg0NzYxNmQ2NTIwNjk3MzIwNzI2NTczNjU3NDIwNzM3NTYzNjM2NTczNzM2Njc1NmM2Yzc5IC8vICJHYW1lIGlzIHJlc2V0IHN1Y2Nlc3NmdWxseSIKZnJhbWVfYnVyeSAwCmZyYW1lX2RpZyAwCmxlbgppdG9iCmV4dHJhY3QgNiAwCmZyYW1lX2RpZyAwCmNvbmNhdApmcmFtZV9idXJ5IDAKcmV0c3ViCgovLyBkZWNpZGVfd2lubmVyCmRlY2lkZXdpbm5lcl84Ogpwcm90byAwIDEKYnl0ZWMgNyAvLyAicGxheWVyX2Ffc2lkZSIKYXBwX2dsb2JhbF9nZXQKYnl0ZWMgMTAgLy8gIlRhaWxzIgo9PQpibnogZGVjaWRld2lubmVyXzhfbDIKaW50Y18xIC8vIDEKYiBkZWNpZGV3aW5uZXJfOF9sMwpkZWNpZGV3aW5uZXJfOF9sMjoKaW50Y18wIC8vIDAKZGVjaWRld2lubmVyXzhfbDM6CnJldHN1YgoKLy8gcGF5b3V0CnBheW91dF85Ogpwcm90byAyIDAKaXR4bl9iZWdpbgppbnRjXzEgLy8gcGF5Cml0eG5fZmllbGQgVHlwZUVudW0KZnJhbWVfZGlnIC0yCnB1c2hpbnQgMiAvLyAyCioKdHhuIEZlZQotCml0eG5fZmllbGQgQW1vdW50CmZyYW1lX2RpZyAtMQp0eG5hcyBBY2NvdW50cwppdHhuX2ZpZWxkIFJlY2VpdmVyCml0eG5fc3VibWl0CnJldHN1YgoKLy8gbGVmdG92ZXJfc2lkZQpsZWZ0b3ZlcnNpZGVfMTA6CnByb3RvIDEgMQpmcmFtZV9kaWcgLTEKYnl0ZWMgMTEgLy8gIkhlYWRzIgo9PQpibnogbGVmdG92ZXJzaWRlXzEwX2wyCmJ5dGVjIDExIC8vICJIZWFkcyIKYiBsZWZ0b3ZlcnNpZGVfMTBfbDMKbGVmdG92ZXJzaWRlXzEwX2wyOgpieXRlYyAxMCAvLyAiVGFpbHMiCmxlZnRvdmVyc2lkZV8xMF9sMzoKcmV0c3ViCgovLyBoZWxsb19jYXN0ZXIKaGVsbG9jYXN0ZXJfMTE6CnByb3RvIDAgMApieXRlY18wIC8vICIiCmR1cAp0eG5hIEFwcGxpY2F0aW9uQXJncyAxCmZyYW1lX2J1cnkgMQpmcmFtZV9kaWcgMQpjYWxsc3ViIGhlbGxvXzAKZnJhbWVfYnVyeSAwCmJ5dGVjIDYgLy8gMHgxNTFmN2M3NQpmcmFtZV9kaWcgMApjb25jYXQKbG9nCnJldHN1YgoKLy8gc3RhcnRfZ2FtZV9jYXN0ZXIKc3RhcnRnYW1lY2FzdGVyXzEyOgpwcm90byAwIDAKYnl0ZWNfMCAvLyAiIgppbnRjXzAgLy8gMApieXRlY18wIC8vICIiCnR4bmEgQXBwbGljYXRpb25BcmdzIDEKZnJhbWVfYnVyeSAyCnR4biBHcm91cEluZGV4CmludGNfMSAvLyAxCi0KZnJhbWVfYnVyeSAxCmZyYW1lX2RpZyAxCmd0eG5zIFR5cGVFbnVtCmludGNfMSAvLyBwYXkKPT0KYXNzZXJ0CmZyYW1lX2RpZyAxCmZyYW1lX2RpZyAyCmNhbGxzdWIgc3RhcnRnYW1lXzMKZnJhbWVfYnVyeSAwCmJ5dGVjIDYgLy8gMHgxNTFmN2M3NQpmcmFtZV9kaWcgMApjb25jYXQKbG9nCnJldHN1YgoKLy8gam9pbl9nYW1lX2Nhc3Rlcgpqb2luZ2FtZWNhc3Rlcl8xMzoKcHJvdG8gMCAwCmJ5dGVjXzAgLy8gIiIKaW50Y18wIC8vIDAKdHhuIEdyb3VwSW5kZXgKaW50Y18xIC8vIDEKLQpmcmFtZV9idXJ5IDEKZnJhbWVfZGlnIDEKZ3R4bnMgVHlwZUVudW0KaW50Y18xIC8vIHBheQo9PQphc3NlcnQKZnJhbWVfZGlnIDEKY2FsbHN1YiBqb2luZ2FtZV80CmZyYW1lX2J1cnkgMApieXRlYyA2IC8vIDB4MTUxZjdjNzUKZnJhbWVfZGlnIDAKY29uY2F0CmxvZwpyZXRzdWIKCi8vIHJlc29sdmVfY2FzdGVyCnJlc29sdmVjYXN0ZXJfMTQ6CnByb3RvIDAgMApieXRlY18wIC8vICIiCmludGNfMCAvLyAwCnR4bmEgQXBwbGljYXRpb25BcmdzIDEKaW50Y18wIC8vIDAKZ2V0Ynl0ZQpmcmFtZV9idXJ5IDEKZnJhbWVfZGlnIDEKY2FsbHN1YiByZXNvbHZlXzUKZnJhbWVfYnVyeSAwCmJ5dGVjIDYgLy8gMHgxNTFmN2M3NQpmcmFtZV9kaWcgMApjb25jYXQKbG9nCnJldHN1YgoKLy8gY2hlY2tfd2luc19jYXN0ZXIKY2hlY2t3aW5zY2FzdGVyXzE1Ogpwcm90byAwIDAKaW50Y18wIC8vIDAKY2FsbHN1YiBjaGVja3dpbnNfNgpmcmFtZV9idXJ5IDAKYnl0ZWMgNiAvLyAweDE1MWY3Yzc1CmZyYW1lX2RpZyAwCml0b2IKY29uY2F0CmxvZwpyZXRzdWIKCi8vIHJlc2V0X2dhbWVfY2FzdGVyCnJlc2V0Z2FtZWNhc3Rlcl8xNjoKcHJvdG8gMCAwCmJ5dGVjXzAgLy8gIiIKY2FsbHN1YiByZXNldGdhbWVfNwpmcmFtZV9idXJ5IDAKYnl0ZWMgNiAvLyAweDE1MWY3Yzc1CmZyYW1lX2RpZyAwCmNvbmNhdApsb2cKcmV0c3Vi",
+        "clear": "I3ByYWdtYSB2ZXJzaW9uIDgKcHVzaGludCAwIC8vIDAKcmV0dXJu"
+    },
+    "state": {
+        "global": {
+            "num_byte_slices": 4,
+            "num_uints": 1
+        },
+        "local": {
+            "num_byte_slices": 0,
+            "num_uints": 1
+        }
+    },
+    "schema": {
+        "global": {
+            "declared": {
+                "player_a_account": {
+                    "type": "bytes",
+                    "key": "player_a_account",
+                    "descr": "First player's account"
+                },
+                "player_a_side": {
+                    "type": "bytes",
+                    "key": "player_a_side",
+                    "descr": "First player's side of the coin"
+                },
+                "player_b_account": {
+                    "type": "bytes",
+                    "key": "player_b_account",
+                    "descr": "Second player's account"
+                },
+                "player_b_side": {
+                    "type": "bytes",
+                    "key": "player_b_side",
+                    "descr": "Second player's side of the coin"
+                },
+                "wager": {
+                    "type": "uint64",
+                    "key": "wager",
+                    "descr": "Betting amount for the coinflip"
+                }
+            },
+            "reserved": {}
+        },
+        "local": {
+            "declared": {
+                "player_games_won": {
+                    "type": "uint64",
+                    "key": "player_games_won",
+                    "descr": "Amount of coinflip games won"
+                }
+            },
+            "reserved": {}
+        }
+    },
+    "contract": {
+        "name": "coinflip",
+        "methods": [
+            {
+                "name": "hello",
+                "args": [
+                    {
+                        "type": "string",
+                        "name": "name"
+                    }
+                ],
+                "returns": {
+                    "type": "string"
+                }
+            },
+            {
+                "name": "start_game",
+                "args": [
+                    {
+                        "type": "pay",
+                        "name": "payment"
+                    },
+                    {
+                        "type": "string",
+                        "name": "choice"
+                    }
+                ],
+                "returns": {
+                    "type": "string"
+                },
+                "desc": "Player A initiates the game, he pays the wager he wants for the game and then chooses the side of the coin (\"Heads\" or \"Tails\")"
+            },
+            {
+                "name": "join_game",
+                "args": [
+                    {
+                        "type": "pay",
+                        "name": "payment"
+                    }
+                ],
+                "returns": {
+                    "type": "string"
+                },
+                "desc": "Player B joins the game, gets the side that's left (player A picks first), pays the wager and waits for the game to resolve by player A"
+            },
+            {
+                "name": "resolve",
+                "args": [
+                    {
+                        "type": "account",
+                        "name": "opp"
+                    }
+                ],
+                "returns": {
+                    "type": "string"
+                },
+                "desc": "Player A resolves the game, win counter updates and the wager pays out to the player who won"
+            },
+            {
+                "name": "check_wins",
+                "args": [],
+                "returns": {
+                    "type": "uint64"
+                },
+                "desc": "Check personal number of coinflip wins"
+            },
+            {
+                "name": "reset_game",
+                "args": [],
+                "returns": {
+                    "type": "string"
+                },
+                "desc": "Reset global state variables, two players that are already opted in can start a new game after this method executes"
+            }
+        ],
+        "networks": {}
+    },
+    "bare_call_config": {
+        "no_op": "CREATE",
+        "opt_in": "CALL"
+    }
+}
