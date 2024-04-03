@@ -63,14 +63,6 @@
                 "type": "uint64"
             },
             "desc": "Check personal number of coinflip wins"
-        },
-        {
-            "name": "reset_game",
-            "args": [],
-            "returns": {
-                "type": "string"
-            },
-            "desc": "Reset global state variables, two players that are already opted in can start a new game after this method executes"
         }
     ],
     "networks": {}

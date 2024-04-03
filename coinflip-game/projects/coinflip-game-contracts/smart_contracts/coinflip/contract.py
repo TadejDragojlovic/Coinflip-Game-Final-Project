@@ -7,8 +7,6 @@ Author: Tadej Dragojlovic
 Created: 31/03/2024
 """
 
-# TODO: Add subroutine/method that clears all the global state data so the game can be started again after it's finished?
-
 class CoinflipState:
     player_a_side = beaker.GlobalStateValue(
         stack_type = pt.TealType.bytes,
@@ -83,17 +81,13 @@ def start_game(payment: pt.abi.PaymentTransaction, choice: pt.abi.String, *, out
     return pt.Seq(
         pt.Assert(
             pt.And(
-                # pt.Bytes("AAAA") == pt.Bytes("BBBBB"),
                 payment.type_spec().txn_type_enum() == pt.TxnType.Payment, # Making sure it's the correct TRANSACTION TYPE
                 app.state.wager.get() == pt.Int(0),
                 payment.get().receiver() == pt.Global.current_application_address(), # Making sure the user put the correct application address
-
-                # NOTE: This assert fails after reset method
                 app.state.player_a_side.get() == pt.Bytes("Not chosen yet"),
 
-
                 # Checks whether the userer inputed a side for the coinflip correctly (heads/tails in any form should be allowed)
-                # check_correct_input(choice.get()) == pt.Int(1),
+                check_correct_input(choice.get()) == pt.Int(1),
             )
 
         ),
@@ -152,6 +146,9 @@ def resolve(opp: pt.abi.Account, *, output: pt.abi.String) -> pt.Expr:
 
         # Incrementing the counter for games won
         app.state.player_games_won[pt.Txn.accounts[winner.load()]].set(app.state.player_games_won[pt.Txn.accounts[winner.load()]].get() + pt.Int(1)),
+
+        # Resetting the game
+        reset_game(),
     )
 
 @app.external(authorize = beaker.Authorize.opted_in())
@@ -162,22 +159,19 @@ def check_wins(*, output: pt.abi.Uint64) -> pt.Expr:
 
     return output.set(app.state.player_games_won.get())
 
-@app.external(authorize = beaker.Authorize.opted_in())
-def reset_game(*, output: pt.abi.String) -> pt.Expr:
+# @app.external(authorize = beaker.Authorize.opted_in())
+@pt.Subroutine(pt.TealType.none)
+def reset_game() -> pt.Expr:
     """
     Reset global state variables, two players that are already opted in can start a new game after this method executes
     """
 
     return pt.Seq(
-        # TODO: add assert statements to avoid resetting the game whilist in the middle of it
-
-        app.state.player_a_account.set(pt.Bytes("Not chosen yet")),
-        app.state.player_b_account.set(pt.Bytes("Not chosen yet")),
-        app.state.player_a_side.set(pt.Bytes("Empty")),
-        app.state.player_b_side.set(pt.Bytes("Empty")),
+        app.state.player_a_account.set(pt.Bytes("Empty")),
+        app.state.player_b_account.set(pt.Bytes("Empty")),
+        app.state.player_a_side.set(pt.Bytes("Not chosen yet")),
+        app.state.player_b_side.set(pt.Bytes("Not chosen yet")),
         app.state.wager.set(pt.Int(0)),
-
-        output.set(pt.Bytes("Game was reset successfully")),
     )
 
 @pt.Subroutine(pt.TealType.uint64)
