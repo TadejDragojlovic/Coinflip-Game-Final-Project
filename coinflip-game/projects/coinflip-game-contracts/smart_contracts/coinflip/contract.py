@@ -7,6 +7,8 @@ Author: Tadej Dragojlovic
 Created: 31/03/2024
 """
 
+# TODO: add output to methods where it is needed, to inform the user if it was successfully executed
+
 class CoinflipState:
     player_a_side = beaker.GlobalStateValue(
         stack_type = pt.TealType.bytes,
