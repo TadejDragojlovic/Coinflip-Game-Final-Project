@@ -120,7 +120,7 @@ def join_game(payment: pt.abi.PaymentTransaction, *, output: pt.abi.String) -> p
     )
 
 @app.external(authorize = beaker.Authorize.opted_in())
-def resolve(opp: pt.abi.Account, *, output: pt.abi.String) -> pt.Expr:
+def resolve_game(opp: pt.abi.Account, *, output: pt.abi.String) -> pt.Expr:
     """
     Player A resolves the game, win counter updates and the wager pays out to the player who won
     """

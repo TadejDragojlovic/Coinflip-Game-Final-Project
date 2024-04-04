@@ -44,7 +44,7 @@
             "desc": "Player B joins the game, gets the side that's left (player A picks first), pays the wager and waits for the game to resolve by player A"
         },
         {
-            "name": "resolve",
+            "name": "resolve_game",
             "args": [
                 {
                     "type": "account",

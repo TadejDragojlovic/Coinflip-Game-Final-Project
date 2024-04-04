@@ -1,6 +1,6 @@
 #pragma version 8
 intcblock 0 1
-bytecblock 0x 0x706c617965725f615f6163636f756e74 0x456d707479 0x706c617965725f615f73696465 0x4e6f742063686f73656e20796574 0x706c617965725f625f6163636f756e74 0x7761676572 0x151f7c75 0x706c617965725f625f73696465 0x706c617965725f67616d65735f776f6e 0x4865616473 0x5461696c73 0x6865616473 0x7461696c73
+bytecblock 0x 0x706c617965725f615f6163636f756e74 0x456d707479 0x706c617965725f615f73696465 0x4e6f742063686f73656e20796574 0x706c617965725f625f6163636f756e74 0x7761676572 0x151f7c75 0x706c617965725f625f73696465 0x706c617965725f67616d65735f776f6e 0x5461696c73 0x4865616473 0x6865616473 0x7461696c73
 txn NumAppArgs
 intc_0 // 0
 ==
@@ -18,7 +18,7 @@ pushbytes 0xc627c42c // "join_game(pay)string"
 ==
 bnz main_l9
 txna ApplicationArgs 0
-pushbytes 0x0e33ffbc // "resolve(account)string"
+pushbytes 0xb04a3e05 // "resolve_game(account)string"
 ==
 bnz main_l8
 txna ApplicationArgs 0
@@ -47,7 +47,7 @@ intc_0 // 0
 !=
 &&
 assert
-callsub resolvecaster_17
+callsub resolvegamecaster_17
 intc_1 // 1
 return
 main_l9:
@@ -269,8 +269,8 @@ callsub leftoverside_10
 app_global_put
 retsub
 
-// resolve
-resolve_5:
+// resolve_game
+resolvegame_5:
 proto 1 1
 bytec_0 // ""
 txn Sender
@@ -308,13 +308,13 @@ callsub resetgame_7
 load 2
 intc_0 // 0
 ==
-bnz resolve_5_l4
+bnz resolvegame_5_l4
 load 2
 intc_1 // 1
 ==
-bnz resolve_5_l3
+bnz resolvegame_5_l3
 err
-resolve_5_l3:
+resolvegame_5_l3:
 pushbytes 0x506c61796572204220776f6e2074686520636f696e666c69702e // "Player B won the coinflip."
 frame_bury 0
 frame_dig 0
@@ -324,8 +324,8 @@ extract 6 0
 frame_dig 0
 concat
 frame_bury 0
-b resolve_5_l5
-resolve_5_l4:
+b resolvegame_5_l5
+resolvegame_5_l4:
 pushbytes 0x506c61796572204120776f6e2074686520636f696e666c69702e // "Player A won the coinflip."
 frame_bury 0
 frame_dig 0
@@ -335,7 +335,7 @@ extract 6 0
 frame_dig 0
 concat
 frame_bury 0
-resolve_5_l5:
+resolvegame_5_l5:
 retsub
 
 // check_wins
@@ -378,7 +378,7 @@ decidewinner_8:
 proto 0 1
 bytec_3 // "player_a_side"
 app_global_get
-bytec 10 // "Heads"
+bytec 10 // "Tails"
 ==
 bnz decidewinner_8_l2
 intc_1 // 1
@@ -410,13 +410,13 @@ retsub
 leftoverside_10:
 proto 1 1
 frame_dig -1
-bytec 10 // "Heads"
+bytec 11 // "Heads"
 ==
 bnz leftoverside_10_l2
-bytec 10 // "Heads"
+bytec 11 // "Heads"
 b leftoverside_10_l3
 leftoverside_10_l2:
-bytec 11 // "Tails"
+bytec 10 // "Tails"
 leftoverside_10_l3:
 retsub
 
@@ -448,14 +448,14 @@ bnz checkcorrectinput_11_l5
 err
 checkcorrectinput_11_l5:
 bytec_3 // "player_a_side"
-bytec 11 // "Tails"
+bytec 10 // "Tails"
 app_global_put
 checkcorrectinput_11_l6:
 intc_1 // 1
 b checkcorrectinput_11_l8
 checkcorrectinput_11_l7:
 bytec_3 // "player_a_side"
-bytec 10 // "Heads"
+bytec 11 // "Heads"
 app_global_put
 b checkcorrectinput_11_l6
 checkcorrectinput_11_l8:
@@ -589,8 +589,8 @@ concat
 log
 retsub
 
-// resolve_caster
-resolvecaster_17:
+// resolve_game_caster
+resolvegamecaster_17:
 proto 0 0
 bytec_0 // ""
 intc_0 // 0
@@ -599,7 +599,7 @@ intc_0 // 0
 getbyte
 frame_bury 1
 frame_dig 1
-callsub resolve_5
+callsub resolvegame_5
 frame_bury 0
 bytec 7 // 0x151f7c75
 frame_dig 0
