@@ -223,15 +223,6 @@ bytec 6 // "wager"
 frame_dig -2
 gtxns Amount
 app_global_put
-pushbytes 0x5375636365737366756c6c2e // "Successfull."
-frame_bury 0
-frame_dig 0
-len
-itob
-extract 6 0
-frame_dig 0
-concat
-frame_bury 0
 retsub
 
 // join_game
@@ -276,15 +267,6 @@ bytec_3 // "player_a_side"
 app_global_get
 callsub leftoverside_10
 app_global_put
-pushbytes 0x3230302e // "200."
-frame_bury 0
-frame_dig 0
-len
-itob
-extract 6 0
-frame_dig 0
-concat
-frame_bury 0
 retsub
 
 // resolve
@@ -323,6 +305,37 @@ intc_1 // 1
 +
 app_local_put
 callsub resetgame_7
+load 2
+intc_0 // 0
+==
+bnz resolve_5_l4
+load 2
+intc_1 // 1
+==
+bnz resolve_5_l3
+err
+resolve_5_l3:
+pushbytes 0x506c61796572204220776f6e2074686520636f696e666c69702e // "Player B won the coinflip."
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+b resolve_5_l5
+resolve_5_l4:
+pushbytes 0x506c61796572204120776f6e2074686520636f696e666c69702e // "Player A won the coinflip."
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+resolve_5_l5:
 retsub
 
 // check_wins

@@ -7,8 +7,6 @@ Author: Tadej Dragojlovic
 Created: 31/03/2024
 """
 
-# TODO: add output to methods where it is needed, to inform the user if it was successfully executed
-
 class CoinflipState:
     player_a_side = beaker.GlobalStateValue(
         stack_type = pt.TealType.bytes,
@@ -95,10 +93,7 @@ def start_game(payment: pt.abi.PaymentTransaction, choice: pt.abi.String, *, out
         ),
 
         app.state.player_a_account.set(pt.Txn.sender()),
-
         app.state.wager.set(payment.get().amount()),
-
-        output.set(pt.Bytes("Successfull.")),
     )
 
 @app.external(authorize = beaker.Authorize.opted_in())
@@ -122,8 +117,6 @@ def join_game(payment: pt.abi.PaymentTransaction, *, output: pt.abi.String) -> p
 
         app.state.player_b_account.set(pt.Txn.sender()),
         app.state.player_b_side.set(leftover_side(app.state.player_a_side.get())),
-
-        output.set(pt.Bytes("200.")),
     )
 
 @app.external(authorize = beaker.Authorize.opted_in())
@@ -151,9 +144,14 @@ def resolve(opp: pt.abi.Account, *, output: pt.abi.String) -> pt.Expr:
 
         # Resetting the game
         reset_game(),
+
+        pt.Cond(
+            [winner.load() == pt.Int(0), output.set(pt.Bytes("Player A won the coinflip."))],
+            [winner.load() == pt.Int(1), output.set(pt.Bytes("Player B won the coinflip."))]
+        )
     )
 
-@app.external(authorize = beaker.Authorize.opted_in())
+@app.external(authorize = beaker.Authorize.opted_in(), read_only=True)
 def check_wins(*, output: pt.abi.Uint64) -> pt.Expr:
     """
     Check personal number of coinflip wins
@@ -161,7 +159,6 @@ def check_wins(*, output: pt.abi.Uint64) -> pt.Expr:
 
     return output.set(app.state.player_games_won.get())
 
-# @app.external(authorize = beaker.Authorize.opted_in())
 @pt.Subroutine(pt.TealType.none)
 def reset_game() -> pt.Expr:
     """
